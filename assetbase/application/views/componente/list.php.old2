@@ -1,0 +1,989 @@
+<input type="hidden" id="permission" value="<?php echo $permission;?>">   
+<div class="row">
+  <div class="col-xs-12">
+    <div class="alert alert-danger alert-dismissable" id="error" style="display: none">
+          <h4><i class="icon fa fa-ban"></i> Error!</h4>
+          Revise que todos los campos obligatorios esten seleccionados
+      </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="alert alert-success" id="error2" style="display: none">
+          <h4></h4>
+          EL EQUIPO POSEE COMPONENTES ASOCIADOS
+      </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="alert alert-success" id="error3" style="display: none">
+          <h4></h4>
+          EL EQUIPO NO POSEE COMPONENTES ASOCIADOS
+      </div>
+  </div>
+</div>
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <h2 class="box-title ">Asociar Componentes a Equipo</h2>
+        </div><!-- /.box-header -->
+        <div class="box-body">
+          <!-- form  -->
+          <form  id="form_order" action="" accept-charset="utf-8">
+            
+            <div class="row" >
+              <div class="col-sm-12 col-md-12">
+                <div role="tabpanel" class="tab-pane">
+                    <div class="form-group">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h2 class="panel-title  fa fa-cogs" >   Datos de Equipo</h2>
+                        </div>
+       
+                        <div class="panel-body">
+                          <div class="tab-content">
+                              <div role="tabpanel" class="tab-pane active" id="choras">
+                                <div class="row" >
+                                  <div class="col-xs-4">Equipo <strong style="color: #dd4b39">*</strong> : 
+                                    <select id="equipo" name="equipo" class="form-control select2" />
+                                    <input type="hidden" id="id_equipo" name="id_equipo">
+                                  </div>
+                                  <br>
+                                  <br>
+                          
+
+                                   <div class="col-xs-12">
+                                   </div>
+                                  <div class="col-xs-6"><label>Descripcion:</label>
+                                      <textarea class="form-control" id="descrip" name="descrip" disabled></textarea>
+                                  </div>
+                                 
+                                 
+                                  <div class="col-xs-6">
+
+                                    <table class="table table-bordered table-responsive" id="tablacompo">
+                                      <thead>
+                                        <tr>
+                                          <th width="2%"></th>                  
+                                          <th>Componente:</th>
+
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        
+                                      </tbody>
+                                    </table>
+                                    </div>
+                                      
+
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        </div>
+                        </div>
+
+                   <div role="tabpanel" class="tab-pane">
+                    <div class="form-group">
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h2 class="panel-title  fa  fa-th-large">  Asociar Componentes</h2>
+                        </div>
+       
+                        <div class="panel-body">
+                          <div class="tab-content">
+                              <div role="tabpanel" class="tab-pane active" id="choras">
+                                <div class="row" >
+                                <div class="col-xs-4">Componente <strong style="color: #dd4b39">*</strong> :  
+                                            <select  id="componente" name="componente" class="form-control">
+                                            <input type="hidden" id="id_componente" name="id_componente">
+                                          </div> 
+                                          <br>
+                                                                          
+                                          <div class="col-xs-4">
+                                          <!--id="addcomponente"-->
+                                            <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#modalOrder"><i class="fa fa-plus"> Nuevo</i></button>
+                                           <!-- <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalOrder" >Vale de Salida</button>-->
+                                          </div>
+                   
+                                          <div class="col-xs-8">
+                                            
+                                          </div>     
+                                          <br>
+                                          <div class="col-xs-12">
+                                            
+                                          </div>
+                                          <br>
+                                          <div >
+                                            
+                                          </div>
+                                          <br>
+                                        
+                                          <div class="col-xs-4"> 
+                                          
+                                            <button type="button" class="btn btn-success" id="addcompo"><i class="fa fa-check"> Asociar</i></button>
+                                          </div>
+                                          <br>
+                                            <table class="table table-bordered" id="tablaequipos" border="1px"> 
+                                            <br>
+                                                 <tr>                       
+                                                  <br>
+                                                  
+                                                  <th width="1%"></th>
+                                                  <th width="2%">Equipo</th>
+                                                  <th width="5%">Componente</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                              
+                                              </tbody>
+                                            </table>
+
+                          
+
+
+                      <!--    <div>
+
+                              
+                              <ul class="nav nav-tabs" role="tablist">
+                                
+                                <li role="presentation"><a href="#compon" aria-controls="profile" role="tab" data-toggle="tab" class="fa  fa-gear "> Componentes <strong style="color: #dd4b39">*</strong></a></li>
+                                
+                              </ul>
+
+                              
+                              <div class="tab-content">
+                                
+                                <div role="tabpanel" class="tab-pane" id="compon">
+                                <br>
+                                          <fieldset><legend></legend></fieldset>
+                                          <div class="col-xs-4"> 
+                                            <select  id="componente" name="componente" class="form-control">
+                                            <input type="hidden" id="id_componente" name="id_componente">
+                                          </div> 
+                                                                          
+                                          <div class="col-xs-4">
+                                          id="addcomponente"-->
+                                          <!--  <button type="button" class="btn btn-success"  data-toggle="modal" data-target="#modalOrder"><i class="fa fa-plus"> Nuevo</i></button>
+                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalOrder" >Vale de Salida</button>-->
+                                        <!--  </div>
+                   
+                                          <div class="col-xs-8">
+                                            
+                                          </div>     
+                                          <br>
+                                          <div class="col-xs-12">
+                                            
+                                          </div>
+                                          <br>
+                                          <div >
+                                            
+                                          </div>
+                                          <br>
+                                        
+                                          <div class="col-xs-4"> 
+                                          
+                                            <button type="button" class="btn btn-success" id="addcompo"><i class="fa fa-check"> Asociar</i></button>
+                                          </div>
+                                          <br>
+                                            <table class="table table-bordered" id="tablaequipos" border="1px"> 
+                                            <br>
+                                                 <tr>                       
+                                                  <br>
+                                                  
+                                                  <th width="1%"></th>
+                                                  <th width="2%">Equipo</th>
+                                                  <th width="5%">Componente</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                              
+                                              </tbody>
+                                            </table>
+                                         
+                                </div>cierre del div  compon-->
+                                
+                           <!--   </div>
+
+                            </div>-->
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+
+                            </div>
+                            </div>
+                            </div>
+
+      </div>
+        </div>
+      </div> 
+    </div>
+</div> 
+
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger btn-sm delete" onclick="javascript:limpiarModal()">Cancelar</button>
+      <button type="button" class="btn btn-primary btn-sm" onclick="guardar()">Guardar</button>
+    </div>  <!-- /.modal footer -->
+
+
+            <!-- / Modal -->
+          </form>
+        </div><!-- /.box-body -->
+      </div><!-- /.box -->
+    </div><!-- /.col -->
+  </div><!-- /.row -->
+</section><!-- /.content -->
+<!-- Modal -->
+ <div class="modal fade" id="modalOrder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document" style="width: 40%">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span id="modalAction"> </span> </h4>
+       </div> <!-- /.modal-header  -->
+
+      <div class="modal-body input-group ui-widget" id="modalBodyArticle">
+        
+        <div class="row" >
+          <div class="col-sm-12 col-md-12">
+            <div role="tabpanel" class="tab-pane">
+              <div class="form-group">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                      <h2 class="panel-title">Agregar Componente</h2>
+                  </div>
+                  <div class="panel-body">
+
+                    <div class="alert alert-danger alert-dismissable" id="error1" style="display: none">
+                            <h4><i class="icon fa fa-ban"></i> Error!</h4>
+                            Revise que todos los campos esten completos...                  
+                    </div>
+            
+                  <br>
+                    <div class="col-xs-8"><h4>Descripcion <strong style="color: #dd4b39">*</strong>: </h4>
+                      <input type="text"   class="form-control input-md" id="descrip1"  name="descrip1" placeholder="Ingrese Descripcion" />
+                    </div>
+                    
+                    <div class="col-xs-8"><h4>Informacion:</h4>
+                     
+                      <textarea class="form-control" id="informacion" name="informacion" placeholder="Ingrese Informacion Adicional"></textarea>
+                    </div>
+                    <br>
+                    <div class="col-xs-8"><h4>Marca <strong style="color: #dd4b39">*</strong>: </h4>
+                      <select  class="form-control input-md" id="ma"  name="ma" />
+                    </div>
+                  </div>
+                <fieldset><legend></legend></fieldset>
+                    <div>
+                      <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#adj" aria-controls="home" role="tab" data-toggle="tab" class="fa fa-folder-open-o"> Adjuntar</a></li>
+                        <!--class="fa fa-folder-open-o"-->
+                      </ul>
+                      
+                      <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="adj">
+                        <br>
+                        <fieldset><legend></legend></fieldset>
+                          
+                          <input id="input-4" name="input4[]" type="file"  class="form-control input-md">
+                        </div>
+                        
+                      </div>
+
+                    </div><!--  multiple class="file-loading" cierro div del tab-->
+                  </div>
+                
+         </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+     
+
+      <div class="modal-footer">
+       
+        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal" onclick="guardarcompo()" >Guardar</button>
+      </div>  <!-- /.modal footer -->
+
+       </div>  <!-- /.modal-body -->
+    </div> <!-- /.modal-content -->
+
+  </div>  <!-- /.modal-dialog modal-lg -->
+</div>  <!-- /.modal fade -->
+<!-- / Modal -->
+
+
+<script>
+
+traer_equipo();
+
+
+function traer_equipo(){
+ 
+      $.ajax({
+        type: 'POST',
+        data: { },
+        url: 'index.php/Componente/traerequipo', //index.php/
+        success: function(data){
+               
+                 var opcion  = "<option value='-1'>Seleccione...</option>" ; 
+                  $('#equipo').append(opcion); 
+                for(var i=0; i < data.length ; i++) 
+                {    
+                      var nombre = data[i]['codigo'];
+                      var opcion  = "<option value='"+data[i]['id_equipo']+"'>" +nombre+ "</option>" ; 
+
+                    $('#equipo').append(opcion); 
+                                   
+                }
+              },
+        error: function(result){
+              
+              console.log(result);
+            },
+           dataType: 'json'
+        });
+}
+
+traer_componente();
+
+function traer_componente(){
+      $.ajax({
+        type: 'POST',
+        data: { },
+        url: 'index.php/Componente/getcomponente', //index.php/
+        success: function(data){
+               
+                 var opcion  = "<option value='-1'>Seleccione...</option>" ; 
+                  $('#componente').append(opcion); 
+                for(var i=0; i < data.length ; i++) 
+                {    
+                      var nombre = data[i]['descripcion'];
+                      var opcion  = "<option value='"+data[i]['id_componente']+"'>" +nombre+ "</option>" ; 
+
+                    $('#componente').append(opcion); 
+                                   
+                }
+              },
+        error: function(result){
+              
+              console.log(result);
+            },
+            dataType: 'json'
+        });
+}
+traer_marca();
+function traer_marca(){
+      $.ajax({
+        type: 'POST',
+        data: { },
+        url: 'index.php/Componente/getmarca', //index.php/
+        success: function(data){
+               
+                 var opcion  = "<option value='-1'>Seleccione...</option>" ; 
+                  $('#ma').append(opcion); 
+                for(var i=0; i < data.length ; i++) 
+                {    
+                      var nombre = data[i]['marcadescrip'];
+                      var opcion  = "<option value='"+data[i]['marcaid']+"'>" +nombre+ "</option>" ; 
+
+                    $('#ma').append(opcion); 
+                                   
+                }
+              },
+        error: function(result){
+              
+              console.log(result);
+            },
+            dataType: 'json'
+        });
+}
+  //Agrega un nuevo componente
+
+/*$("#addcomponente").click(function(){  
+
+         bootbox.dialog({
+          backdrop: true,
+          title: "",
+          style:"width: 60%",
+          message:'<form role="form" id="agregarC" name="agregarC" >'+  
+                    '<div class="row" >'+
+                      '<div class="col-sm-12 col-md-12">'+
+                        '<div role="tabpanel" class="tab-pane">'+
+                          '<div class="form-group">'+
+                            '<div class="panel panel-default">'+
+                              '<div class="panel-heading">'+
+                                  '<h2 class="panel-title">Agregar Componente</h2>'+
+                              '</div>'+
+                              '<div class="panel-body">'+
+                              '<br>'+
+                                '<div class="col-xs-8">Descripcion'+
+                                  '<input type="text"   class="form-control input-md" id="descrip1"  name="descrip" placeholder="Ingrese Descripcion" >'+
+                                '</div>'+
+                                '<div class="col-xs-8">Informacion'+
+                                 
+                                  '<textarea class="form-control" id="informacion" name="informacion" placeholder="Ingrese Informacion Adicional"></textarea>'+
+                                '</div>'+
+                                '<div class="col-xs-8">Marca'+
+                                  '<select  class="form-control input-md" id="ma"  name="ma" >'+
+                                '</div>'+
+                              '</div>'+
+                            '</div>'+
+                          '</div>'+
+                        '</div>'+
+                      '</div>'+
+                    '</div>'+'</br>'+
+                    '<br>'+
+
+                                '<div>'+
+                                  '<ul class="nav nav-tabs" role="tablist">'+
+                                    '<li role="presentation" class="active"><a href="#adj" aria-controls="home" role="tab" data-toggle="tab"> Adjuntar</a></li>'+
+                                    //class="fa fa-folder-open-o"
+                                  '</ul>'+
+                                  '<div class="tab-content">'+
+                                    '<div role="tabpanel" class="tab-pane active" id="adj">'+
+                                      '<fieldset> </fieldset>'+
+                                      '<br>'+
+                                      '<input id="input-4" name="input4[]" type="file" multiple class="file-loading">'+
+                                    '</div>'+
+                                    
+                                  '</div>'+
+
+                                '</div>'+//cierro div del tab
+                              '</div>'+
+                            
+                     
+                    '<form>',
+                
+
+            buttons: {
+                      success: {
+                      label: "guardar",
+                      className:"btn-primary guardar" ,
+                      callback: function (e) {
+                      
+                                   var datos={
+                                      'descripcion': $('#descrip1').val(),
+                                      'informacion': $('#informacion').val(),
+                                      'marcaid' : $('#ma').val(),
+                                      'pdf' : $('#input-4').val(),                                                                   
+                                    };
+                                     
+                                    $.ajax({
+                                      type:"POST",
+                                      url: "index.php/Componente/agregar_componente", //controlador /metodo
+                                      data:{datos:datos},
+                                      success: function(data){
+                                          console.log(data);
+                                          if(data > 0)
+                                          {  
+                                              var texto = '<option value="'+data+'">'+ datos.descripcion +'</option>';
+                                              console.log(texto);
+
+                                              $('#componente').append(texto);
+                                           }
+
+                                
+                                      },
+                                      
+                                      error: function(result){
+              
+                                      console.log(result);
+                                      },
+                                       dataType: 'json'
+                                  });
+                      }//fin calback
+                  }//fin success
+              },//fin Buttons
+              onEscape: function() {return ;},
+        });  //FIN DIALOG  
+    traer_marca();
+ }); */
+
+//PDF
+/*$(document).on('ready', function() {
+  $("#input-4").fileinput({showCaption: false});
+});*/
+
+$('#equipo').change(function(){
+  
+    var idequipo = $(this).val();
+    //var idequipo = $(this).parent('td').parent('tr').attr('id');
+    //alert(idequipo);
+     $('#tablacompo tbody tr').html("");
+    var Error1=false;
+
+    $.ajax({
+        type: 'POST',
+        data: { idequipo: idequipo},
+        url: 'Componente/getcompo', //index.php/ getcompo
+        success: function(data){
+                               
+              console.log(data);
+               
+             if (data!= 0) {
+                var de = data[0]['descripcion']; 
+                var comp = data[0]['dee11'];
+                $('#descrip').val(de); 
+
+               
+
+             /*var tr = "<tr >"+
+                                "<td ></td>"+
+                                "<td>"+comp+"</td>"+
+                                
+                            "</tr>";*/
+           
+               
+               for(var i=0; i < data.length ; i++){
+
+              var   table= '<tr>'+   
+                            '<td ></td>'+
+                           '<td>'+data[i]['dee11']+'</td>'+
+                           
+                         '</tr>';
+                $('#tablacompo').append(table); 
+                }
+                console.log(table);
+          
+              /*$("#tablacompo tbody ").each(function (index) 
+                  {
+                    $('#tablacompo').append(tr);
+                   
+                      //var ide = $(this).attr('id');
+                     // tablacompo.push(tr);            
+                    
+                }); */
+               // $('#componente').append(tr); 
+               /* for(var i=0; i < data.length ; i++) 
+                {    
+                      var tr = data[i]['dee11'];
+                      
+
+                    $('#tablacompo').append(tr); 
+                                   
+                } */
+              
+        
+                $('#tablacompo').val('');
+
+               //  $('#error2').fadeIn('slow'); //EL EQUIPO POSEE COMPONENTE ASOCIADO
+               //  Error1=true;
+
+                
+
+            /*  $.notify("EL EQUIPO POSEE COMPONENTE ASOCIADO! ",  {
+                
+                className: "info",
+                timeout : 5000,
+                                
+                align:"center",
+
+                verticalAlign:"middle",
+                
+                
+                width: "600px"
+              });*/
+
+
+             }
+             else{
+             traer_descripcion(idequipo); 
+              
+               } 
+
+             
+  //$('#error2').fadeOut('slow');
+             
+              
+            
+              },
+             
+          
+        error: function(result){
+              //alert("error entr en la otra consulta");
+              console.log(result);
+             traer_descripcion(idequipo);
+            },
+            dataType: 'json'
+        });
+
+
+});
+
+
+function traer_descripcion(idequipo){
+      //alert("entre a la funcion"+idequipo);
+    $.ajax({
+            type: 'POST',
+            data: { idequipo: idequipo},
+            url: 'Componente/getequipo', //index.php/ getcompo
+            success: function(data){
+              
+              //alert("ENTRO POR LA CONSULTA2");
+              console.log(data);
+                //alert("Este equipo no posee componentes registrados");
+                data = JSON.parse(data,true);
+                
+             /* console.log(data.descripcion); 
+              console.log(data.datos); 
+              console.log(data['descripcion']); 
+              console.log(data[0]); */
+             
+
+              $('#descrip').val(data.datos); 
+
+             //  $('#error3').fadeIn('slow'); //EL EQUIPO POSEE COMPONENTE ASOCIADO
+                
+              /*$.notify("EL EQUIPO NO POSEE COMPONENTES REGISTRADOS!", {
+                      className: "info",
+  
+                      width: "600px",
+
+                      verticalAlign:"middle",
+      
+                      width: "600px"
+                      
+              });*/
+             // $('#error3').fadeOut('slow');
+
+                    
+                },
+                  error: function(result){
+        
+                      console.log(result);
+                    },
+                   // dataType: 'json'
+                }); 
+
+             
+          }
+
+ /* $("#add").click(function (e) {
+
+        var $equipo = $("select#equipo option:selected").html();
+
+        var id_equipo= $('#id_equipo').val();
+        var equipo = $('#equipo').val();
+        //var parametro = $('#parametro').val();
+        var $parametro = $("select#parametro option:selected").html();
+        var $valor = $('#valor').val();
+        //var datos=Array();
+        //datos=marca.split('%%');  //class='quitarEquipo'
+        //var datos=Array();
+        //datos=parametro.split('');
+         
+        /*<a id='quitarEquipo_"+id_equipo+"' class=' glyphicon glyphicon-remove-circle' style='cursor:pointer'>x</a>
+        ' glyphicon glyphicon-remove-circle' */
+        /*var tr = "<tr>"+
+                    "<td ><a id='quitarEquipo_"+id_equipo+"' class='quitarEquipo' style='cursor:pointer'>X</a></td>"+
+                    "<td>"+$equipo+"</td>"+
+                    "<td>"+$parametro+"</td>"+
+                    //"<td>"+parametro[1]+"</td>"+
+                    "<td>"+$valor+"</td>"+
+                    
+                "</tr>";
+   
+
+        $('#tablaparametro tbody').append(tr);
+        
+        $("#quitarEquipo_"+id_equipo).click(function (e) {
+          //alert('quitar');
+          $(this).parent('td').parent('tr').remove();
+        });
+       
+       $('#equipo').val('');
+       /*$('#parametro').val(''); 
+       $('#valor').val(''); */
+       
+
+    //});
+
+function guardar(){ 
+       
+        
+    var idcompom = new Array();     
+    $("#tablaequipos tbody tr").each(function (index) 
+    {
+     
+        var id_componente = $(this).attr('id');
+        //var id_equipo = $(this).parent('td').parent('tr').attr('id');
+        
+        idcompom.push(id_componente);            
+      
+    });  
+
+   // console.log(idsequipos);
+    var eq= $('#equipo').val();
+        console.log(eq);
+    var parametros = {
+        'id_equipo': $('#equipo').val(),
+        
+    };
+    console.log(parametros);
+    console.log(idcompom);
+   
+        var hayError = false;
+     if(eq>0 && idcompom >0)
+      {   
+          $.ajax({
+              type: 'POST',
+              data: {data:parametros, idcompom:idcompom },
+              url: 'index.php/Componente/guardar_componente',  //index.php/
+              success: function(data){
+                      console.log(data);
+                      
+                    },
+              error: function(result){
+                    
+                    console.log(result);
+                    
+                  },
+                  dataType: 'json'
+              });
+
+          limpiarModal();
+        }
+        else 
+          {
+            hayError=true;
+          $('#error').fadeIn('slow');
+         }
+
+         // $.notify("POR FAVOR COMPLETE LOS DATOS ANTES DE GUARDAR");
+        if(hayError == false){
+                $('#error').fadeOut('slow');
+         }
+
+      
+      
+       
+    /*  if (parametros<0 ) 
+          $.notify( "POR FAVOR SELECCIONE EQUIPO ANTES DE GUARDAR ");
+        
+        else  $.notify("POR FAVOR SELECCIONE COMPONENTE ANTES DE GUARDAR");*/
+
+}
+
+
+
+function guardarcompo(){ 
+
+    var id_equipo= $('#equipo').val(); 
+    var descripcion= $('#descrip1').val();
+    var informacion = $('#informacion').val();
+    var marcaid = $('#ma').val();
+    var pdf= $('#input-4').val();
+
+
+    
+    var parametros = {
+        'descripcion': descripcion,
+        'informacion': informacion,
+        'marcaid': marcaid,
+        'id_equipo': id_equipo,
+        'pdf': pdf,
+
+    };                                              
+    console.log(parametros);
+    var hayError = false; 
+  if( id_equipo>0 && marcaid >0)
+    {                                     
+    $.ajax({
+      type:"POST",
+      url: "index.php/Componente/agregar_componente", //controlador /metodo
+      data:{parametros:parametros},
+      success: function(data){
+        console.log("exito");
+        console.log(data);
+          //alert(data);
+          if(data > 0) //Agrego la descripcion dinamicamte en el select con id componente
+          {  
+            
+              var texto = '<option value="'+data+'">'+ parametros.descripcion +'</option>';
+              console.log(texto);
+
+              $('#componente').append(texto);
+          }
+           
+
+        },
+      
+      error: function(result){
+          console.log("entro por el error");
+          console.log(result);
+      },
+       dataType: 'json'
+    });
+   
+  }
+  else 
+  { 
+    alert("Los campos obligatorios deben estar completos: EQUIPO, COMPONENTE Y MARCA deben estar");
+
+    //var hayError = true;
+    // $('#error1').fadeIn('slow');
+        // return;
+     
+    // $.notify("POR FAVOR SELECCIONE EQUIPO" );
+
+  }
+
+ // $('#error1').fadeOut('slow');
+}
+
+var equipoglob="";
+$("#addcompo").click(function (e) {
+
+    //var equipo = $('#equipo').val();
+    var $equipo = $("select#equipo option:selected").html();
+    var id_equipo= $('#equipo').val();
+    var $componente = $("select#componente option:selected").html();
+    //var compo = $('#compo').val()
+    var id_componente= $('#componente').val();
+    equipoglob = id_equipo;
+    console.log("el id del equipo es :" +equipoglob);
+    console.log("el id del componente es :" +id_componente);
+    var tr = "<tr id='"+id_componente+"'>"+
+                "<td ><i class='fa fa-ban elirow' style='color: #f39c12'; cursor: 'pointer'></i></td>"+
+                "<td>"+$equipo +"</td>"+
+                "<td>"+$componente+"</td>"+
+                
+            "</tr>";
+    var i=0;
+    var hayError = false;
+
+       
+        
+      if(id_componente >0 && equipoglob >0)
+       {
+          $('#tablaequipos tbody').append(tr);
+        }
+    
+    else{
+      
+        var hayError = true;
+        $('#error').fadeIn('slow');
+         return;
+         //$.notify("POR FAVOR, SELECCIONE EQUIPO" );
+      
+      
+       // $.notify("POR FAVOR, SELECCIONE COMPONENTE" );
+    }
+ if(hayError == false){
+    
+$('#error').fadeOut('slow');
+}
+    
+    $(document).on("click",".elirow",function(){
+      var parent = $(this).closest('tr');
+      $(parent).remove();
+      });
+   
+  // $('#descrip').val('');
+   $('#componente').val(''); 
+        
+        $('#error').fadeOut('slow');
+
+});
+
+  </script>
+  <script>
+   function limpiarModal(){
+      $("#equipo").val("");
+      $("#descrip").val("");
+       $("#componente").val("");
+      //$("#tablacompo").val("");
+      //$("#tablaequipos").val("");
+      $('#tablacompo tbody tr').remove();
+
+      $('#tablaequipos tbody tr').remove();
+
+
+    }
+
+    
+ /* var $select = $('.select2');                  
+    
+  $($select).change(
+     
+      function(){              
+          
+          var idequip = $(this).val(); 
+          //var id = $(this).parent('td').parent('tr').attr('id');  
+          alert(idequip);             
+
+          $.ajax({
+                    type: 'POST',
+                    data: { idequip: idequip},
+                    url: 'index.php/Componente/getInfoEquipo', //index.php/
+                    success: function(data){
+                    
+                    alert("entre"); 
+                    console.log(data);                            
+                          $('#compoEq').text(data.descripcion);              
+                      //var com= data['descripcion'];
+                      //var de = data['descripcion']; 
+                       // $('#compoEq').val(com);  
+                       /* datos={
+
+                      'descrip':data[datos.descripcion],
+                              }
+                              $('#compoEq').val(datos.descrip);*/
+                        //console.log(com);
+                      /*  console.log(data["descripcion"]);
+                        console.log(data[0]['descripcion']);
+                        console.log(data.descripcion);
+
+                      },
+                    error : function (data){
+                      console.log('error en la vista'),
+                      console.log(data);
+                      
+                      alert('error');
+                      },
+                
+            });
+    });*/
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

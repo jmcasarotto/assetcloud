@@ -1,0 +1,15 @@
+BD logtrackbase
+-Agregue orden_trabajo
+id_equipo -> INT -> 11
+id_tarea -> NULL 		hugo		28/11/17
+
+-Agregue tbl_tipoordentrabajo
+estados
+5 Predictivo
+6 correctivo programado		hugo		28/11/17
+
+
+04-03-2018 -> Pablo
+-Application/views/otrabajos/dash.php
+-Application/models/Equipo.php
+-Application/helpers/widget_helper.php

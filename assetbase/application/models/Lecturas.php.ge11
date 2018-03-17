@@ -1,0 +1,132 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+
+class Lecturas extends CI_Model
+{
+	function __construct()
+	{
+		parent::__construct();
+	}
+	
+	function lectura_List(){
+
+			/*$this->db->select('parametroequipo.*');
+			$this->db->from('parametroequipo');
+			$this->db->join('parametros', 'parametros.paramId= parametroequipo.paramId');
+			$this->db->join('equipos', 'equipos.id_equipo= parametroequipo.id_equipo');
+		
+
+			
+			$query= $this->db->get();*/
+			 $sql="SELECT * 
+	    	  FROM parametroequipo
+	    	  JOIN parametros ON parametros.paramId=parametroequipo.paramId
+	    	  JOIN equipos ON equipos.id_equipo= parametroequipo.id_equipo
+	    	  
+
+	    	  ";
+	    
+	    $query= $this->db->query($sql);
+		
+		if ($query->num_rows()!=0)
+		{
+			return $query->result_array();	
+		}
+		else
+		{	
+			return false;
+		}
+	}
+	
+	function getequipo(){
+
+		$sql="SELECT * 
+	    	  FROM equipos
+	    	  WHERE equipos.estado='AC'
+	    	  
+
+	    	  ";
+	    
+	    $query= $this->db->query($sql);
+		
+		if ($query->num_rows()!=0)
+		{
+			return $query->result_array();	
+		}
+		else
+		{	
+			return false;
+		}
+
+				/*$query= $this->db->get_where('equipos');
+				if($query->num_rows()>0){
+	                return $query->result();
+	            }
+	            else{
+	                return false;
+	            }*/
+			
+
+	}
+
+	function getcriticidad(){
+
+				$query= $this->db->get_where('criticidad');
+				if($query->num_rows()>0){
+	                return $query->result();
+	            }
+	            else{
+	                return false;
+	            }
+			
+
+	}
+
+	public function insert_lectura($data)
+    {
+        $query = $this->db->insert("parametroequipo",$data);
+        return $query;
+    }
+
+    function getparametros($id){
+		
+			
+			/*$sql= "SELECT *
+			FROM parametros 
+			JOIN setupparam ON setupparam.id_parametro=parametros.paramId
+			WHERE setupparam.id_equipo=$id" ;*/
+
+			$sql= "SELECT *
+			FROM parametros 
+			JOIN setupparam ON setupparam.id_parametro=parametros.paramId
+			
+			WHERE setupparam.id_equipo=$id   ";
+
+			//$this->db->get_where('parametroequipo',array('id'=>$id));
+			
+			$query= $this->db->query($sql);
+			
+			//if($query->num_rows()>0){
+                return $query->result();
+            //}
+            //else{
+              //  return false;
+            //}
+			
+	
+		
+	}
+
+	public function insert_parametro($datas2)
+    {
+        $query = $this->db->insert("parametroequipo",$datas2);
+        return $query;
+    }
+    
+
+	
+
+
+}	
+
+?>

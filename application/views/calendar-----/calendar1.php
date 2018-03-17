@@ -1,0 +1,1030 @@
+<input type="hidden" id="permission" value="Backlog">
+<section class="content">
+    <style>
+      input.prevent{border: none; padding-left: 5px; width: 100%;} 
+      .selmes{margin-bottom: 10px;}     
+    </style>
+         
+      <!-- CALENDARIO -->
+      <div class="col-md-6">
+        <div class="box box-primary">
+            <div class="box-body">
+              <div class="fa fa-fw fa-print" style="color: #A4A4A4; cursor: pointer; margin-left: 15px; border-radius: 18px; " title="Imprimir"  ></div>
+                <div id="calendar"></div>
+            </div><!-- /.box-body -->
+        </div><!-- /. box -->
+      </div><!-- /.col --> 
+
+      <div id="tablas">
+        
+      </div>    
+
+      <!-- <button id="boton">boton</button> -->    
+
+</section><!-- /.content -->
+
+<script>
+
+// $('#boton').click(function(){
+//     $.ajax({
+//         url: 'index.php/Calendario/getTablas',
+//         type: "POST",
+//         data: {mes:1},
+//         success: function(data) {              
+
+//                 $('#tablas').html(data);   
+//         },
+//         error:function(argument) {
+//           alert('fuiste');
+//         }
+//     });
+// });
+
+
+function getTablas(month_) {
+  
+  var mes = parseInt(month_) + 1;
+  //var permission = '<?php echo $permission ?>';
+  var permission = $('#permission').val();
+
+  $.ajax({
+        url: 'index.php/Calendario/getTablas',
+        type: "POST",
+        data: {mes:mes, permission: permission},
+        success: function(data) {
+                 
+                $('#tablas').html(data); 
+        },
+        error:function(argument) {
+          alert('Error. No se encontro alguna tabla');
+        }
+ });
+}
+
+var mes = "";
+
+$(function () {    
+
+  //  CALENDARIO
+
+ /* initialize the external events
+ -----------------------------------------------------------------*/
+  function ini_events(ele) {
+    ele.each(function () {
+        // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+        // it doesn't need to have a start or end
+        var eventObject = {
+          title: $.trim($(this).text()) // use the element's text as the event title
+        };
+
+        // store the Event Object in the DOM element so we can get to it later
+        $(this).data('eventObject', eventObject);
+
+        // make the event draggable using jQuery UI
+        $(this).draggable({
+          zIndex: 1070,
+          revert: true, // will cause the event to go back to its
+          revertDuration: 0  //  original position after the drag
+        });
+
+    });
+  }
+  ini_events($('#external-events div.external-event'));
+
+  /* initialize the calendar
+  -----------------------------------------------------------------*/
+  //Date for the calendar events (dummy data)
+  var date = new Date();
+  var d = date.getDate(),
+  m = date.getMonth(),
+  y = date.getFullYear();
+
+  $('#calendar').fullCalendar({
+      header: {
+        left  : 'prev,next today',
+        center: 'title',
+        right : 'month,agendaWeek,agendaDay'
+      },
+      buttonText: {
+        today: 'Hoy',
+        month: 'Mes',
+        week : 'Semana',
+        day  : 'Día'
+      },
+      // desde aca busca los preventivos
+      events: function(start, end, timezone, callback) {
+        //WaitingOpen('Cargando trabajo');
+        var date_ = new Date($("#calendar").fullCalendar('getDate'));
+        var month_ = date_.getMonth();
+
+        var evento = $.ajax({
+                          url: 'index.php/Calendario/getcalendarot',
+                          data: { month: month_ },
+                          dataType: 'json',
+                          type: 'POST',
+                          success: function(doc) {
+                              var events = [];
+                              getTablas(month_);
+                              $(doc).each(function() {
+
+                                  var tarea = $(this).attr('descripcion');
+                                  // console.log('Tarea: ');
+                                  // console.log(tarea);
+                                  
+                                  var desde = $(this).attr('fecha_program'); //ultimo preventivo hecho
+                                  var from = new Date(desde);                            
+                                  
+                                  // sumo los minutos
+                                  var minutos = parseInt(from.getMinutes());
+                                  var duracion = parseInt($(this).attr('duracion'));
+                                  var totalminutos = minutos + duracion;
+                                  // console.log('fecha OT: ');
+                                  // console.log(from);
+                                  // console.log('Duracion: ');
+                                  // console.log(duracion);
+
+
+                                  var hasta = new Date(from);
+                                  hasta = hasta.setMinutes(totalminutos);
+                                  
+                                  var to = new Date(hasta);
+                                  // console.log('fecha con duracion: ');
+                                  // console.log(to);                            
+
+                                  // asigna colores en funcion del tipo de orden
+                                  var  Color = '';
+                                  switch ($(this).attr('tipo')) {
+                                    case '1':
+                                            Color = '#3c8dbc';    //Orden Trabajo (celeste)
+                                            break;
+                                            case '2':
+                                            Color = '#f56954';    //Correctivo (rojo)
+                                            break;
+                                            case '3':
+                                            Color = '#39CCCC';   //Preventivo (turquesa)
+                                            break;
+                                            case '4':
+                                            Color = '#ff851b';   //Backlog (naranja)
+                                            break;
+                                            case '5':
+                                            Color = '#00a65a';    //Predictivo (verde)
+                                            break;
+                                            case '6':
+                                            Color = '#D81B60';   //Correctivo Programado (fucsia)
+                                            break;
+                                  };
+
+                                  events.push({
+                                          // title: $(this).attr('descripcion') + ',' + $(this).attr('id_tarea'),
+                                          //start:to,
+                                          start:from,
+                                          end:to,
+                                          title:  $(this).attr('descripcion'),
+                                          codigo: $(this).attr('nro'),
+                                          equipo: $(this).attr('codigo'),
+                                          id_orden: $(this).attr('id_orden'),
+                                          allDay: false,
+                                          backgroundColor: Color,
+                                        });
+                              });
+                            
+                              callback(events);
+                              WaitingClose();
+                          },
+
+                          error: function(doc) {
+                            WaitingClose();
+                            alert('Sin datos para este mes');
+                                  //alert("Error en ajax calendario:" + doc);
+                          }
+                      });
+      },
+
+      eventClick: function(event) {
+        //// console.log('eventossss');
+        // console.log(evento);
+
+        console.log('Titulo:');
+        console.log(event.title);
+        //setTimeout("$('#modalPrevent').modal('show')",0);
+        $('#title').remove();
+        $('#codigo_equipo').remove();
+        $('#numero').remove();
+        $('#modal_desc').remove();
+        $('#modal_prev tbody').append(
+
+          '<tr id="modal_desc">'+
+          '<td class="tit"><input type="text" class="numero prevent" id="numero" value=" '+ event.id_orden +' " placeholder=""></td>'+
+          '<td class="cod" id="cod"><input type="text" class="codigo_equipo prevent" id="codigo_equipo" value=" '+ event.equipo +' " placeholder=""></td>'+
+          '<td class="tit"><input type="text" class="title prevent" id="title" value=" '+ event.title +' " placeholder=""></td>'+          
+          '</tr>'
+          );
+
+          $('#modalPrevent').modal('show');
+      },
+
+      editable: true,
+      droppable: true, // this allows things to be dropped onto the calendar !!!
+
+      drop: function (date, allDay) { // this function is called when something is dropped
+        // retrieve the dropped element's stored Event Object
+        var originalEventObject = $(this).data('eventObject');
+
+        // we need to copy it, so that multiple events don't have a reference to the same object
+        var copiedEventObject = $.extend({}, originalEventObject);
+
+        // assign it the date that was reported
+        copiedEventObject.start = date;
+        copiedEventObject.allDay = allDay;
+        copiedEventObject.backgroundColor = $(this).css("background-color");
+        copiedEventObject.borderColor = $(this).css("border-color");
+
+        // render the event on the calendar
+        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+        $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+        // is the "remove after drop" checkbox checked?
+        if ($('#drop-remove').is(':checked')) {
+          // if so, remove the element from the "Draggable Events" list
+          $(this).remove();
+        }
+      },
+      // Triggered when dragging stops and the event has moved to a different day/time.
+      eventDrop: function(event, delta, revertFunc) {
+
+                  alert(event.title + " was dropped on " + event.start.format());
+
+                  if (!confirm("Are you sure about this change?")) {
+                    revertFunc();
+                  }
+
+                },
+      // Triggered when resizing stops and the event has changed in duration.          
+      eventResize: function(event, delta, revertFunc) {
+
+                        alert(event.title + " end is now " + event.end.format());
+
+                        if (!confirm("is this okay?")) {
+                          revertFunc();
+                    }
+
+                  }  
+  });
+
+  /* ADDING EVENTS */
+    var currColor = "#3c8dbc"; //Red by default
+    //Color chooser button
+    var colorChooser = $("#color-chooser-btn");
+    $("#color-chooser > li > a").click(function (e) {
+      e.preventDefault();
+      //Save color
+      currColor = $(this).css("color");
+      //Add color effect to button
+      $('#add-new-event').css({"background-color": currColor, "border-color": currColor});
+    });
+    $("#add-new-event").click(function (e) {
+        e.preventDefault();
+        //Get value and make sure it is not null
+        var val = $("#new-event").val();
+        if (val.length == 0) {
+          return;
+        }
+
+        //Create events
+        var event = $("<div />");
+        event.css({"background-color": currColor, "border-color": currColor, "color": "#fff"}).addClass("external-event");
+        event.html(val);
+        $('#external-events').prepend(event);
+
+        //Add draggable funtionality
+        ini_events(event);
+
+        //Remove event from text input
+        $("#new-event").val("");
+    });    
+});
+
+$(".fa-print").click(function (e) {
+
+  $("#calendar").printArea();
+
+
+            
+}); 
+
+$(function(){
+  //  Datatables listas
+    $('#correctivo').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "language": {
+              "lengthMenu": "Ver _MENU_ filas por página",
+              "zeroRecords": "No hay registros",
+              "info": "Mostrando página _PAGE_ de _PAGES_",
+              "infoEmpty": "No hay registros disponibles",
+              "infoFiltered": "(filtrando de un total de _MAX_ registros)",
+              "sSearch": "Buscar:  ",
+              "oPaginate": {
+                  "sNext": "Sig.",
+                  "sPrevious": "Ant."
+              }
+        }
+    });
+
+    $('#preventivo').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "language": {
+              "lengthMenu": "Ver _MENU_ filas por página",
+              "zeroRecords": "No hay registros",
+              "info": "Mostrando página _PAGE_ de _PAGES_",
+              "infoEmpty": "No hay registros disponibles",
+              "infoFiltered": "(filtrando de un total de _MAX_ registros)",
+              "sSearch": "Buscar:  ",
+              "oPaginate": {
+                  "sNext": "Sig.",
+                  "sPrevious": "Ant."
+              }
+        }
+    });
+
+    $('#preventhoras').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "language": {
+              "lengthMenu": "Ver _MENU_ filas por página",
+              "zeroRecords": "No hay registros",
+              "info": "Mostrando página _PAGE_ de _PAGES_",
+              "infoEmpty": "No hay registros disponibles",
+              "infoFiltered": "(filtrando de un total de _MAX_ registros)",
+              "sSearch": "Buscar:  ",
+              "oPaginate": {
+                  "sNext": "Sig.",
+                  "sPrevious": "Ant."
+              }
+        }
+    });
+
+    $('#backlog').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "language": {
+              "lengthMenu": "Ver _MENU_ filas por página",
+              "zeroRecords": "No hay registros",
+              "info": "Mostrando página _PAGE_ de _PAGES_",
+              "infoEmpty": "No hay registros disponibles",
+              "infoFiltered": "(filtrando de un total de _MAX_ registros)",
+              "sSearch": "Buscar:  ",
+              "oPaginate": {
+                  "sNext": "Sig.",
+                  "sPrevious": "Ant."
+              }
+        }
+    });
+
+    $('#predictivo').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": true,
+        "language": {
+              "lengthMenu": "Ver _MENU_ filas por página",
+              "zeroRecords": "No hay registros",
+              "info": "Mostrando página _PAGE_ de _PAGES_",
+              "infoEmpty": "No hay registros disponibles",
+              "infoFiltered": "(filtrando de un total de _MAX_ registros)",
+              "sSearch": "Buscar:  ",
+              "oPaginate": {
+                  "sNext": "Sig.",
+                  "sPrevious": "Ant."
+              }
+        }
+    });
+});
+
+
+///// Datepicker para modales
+  $("#fecha_progr_pred").datepicker({
+      Format: 'dd/mm/yy',
+      startDate: '-3d'
+      //firstDay: 1
+    }).datepicker("setDate", new Date());
+
+  $("#fecha_progr_correct").datepicker({
+      Format: 'dd/mm/yy',
+      startDate: '-3d'
+      //firstDay: 1
+    }).datepicker("setDate", new Date());
+  
+  $("#fecha_progr_prevent").datepicker({
+      Format: 'dd/mm/yy',
+      startDate: '-3d'
+      //firstDay: 1
+    }).datepicker("setDate", new Date());
+
+  $("#fecha_progr_back").datepicker({
+      Format: 'dd/mm/yy',
+      startDate: '-3d'
+      //firstDay: 1
+    }).datepicker("setDate", new Date());
+
+  $("#fecha_progr_prevent_horas").datepicker({
+      Format: 'dd/mm/yy',
+      startDate: '-3d'
+      //firstDay: 1
+    }).datepicker("setDate", new Date());
+
+
+//////////  CORRECTIVO (Listoooo)
+
+  var tarea = "";
+  var fecha_solicit = "";
+  var id_sol = "";
+  var id_eq = "";
+  var desc_causa = "";
+
+  // Genera Orden de Trabajo y la guarda automaticamente
+  $('.fa-stop-circle').click( function(){
+
+    // Mes segun cambia el calendario se va corriendo
+      //var date_ = new Date($("#calendar").fullCalendar('getDate'));
+      //var month_ = date_.getMonth() + 1;
+      //alert(month_);
+
+    //tarea = 1; // id_tarea (por defecto 1)
+    //  nro no va.
+    //  fecha (fecha de hoy)
+    //  fecha_progr_pred  lo toma del modal
+    // fecha_solicit = $(this).parents("tr").find("td").eq(5).html();
+    // desc_causa = $(this).parents("tr").find("td").eq(4).html();
+    // id_sol = $(this).parents("tr").find("td").eq(2).html();
+    // id_eq = $(this).parents("tr").find("td").eq(1).html();
+  });
+
+  function fill_Correc(dato){
+    //alert(dato);
+    $.ajax({
+          type: 'POST', 
+          data: {id:dato},
+          url: 'index.php/Calendario/getCorrectPorId',  
+          success: function(data){
+
+                  console.log('correctivos: ');
+                  console.log(data);
+                   tarea = 1;                        // id_tarea (por defecto 1)
+                   fecha_solicit = data[0]['f_solicitado'];
+                   desc_causa = data[0]['causa'];
+                   id_sol = data[0]['id_solicitud'];
+                   id_eq = data[0]['id_equipo'];
+                },
+          error: function(data){
+
+                console.log(data);
+              },
+          dataType: 'json'    
+      }); 
+  }
+
+
+  // Limpia variables
+  function CancCorrec(){
+     tarea = "";
+     fecha_solicit = "";
+     id_sol = "";
+     id_eq = "";
+     desc_causa = "";
+  }
+
+  // Guarda OT desde Correctivo (Solicitud de Servicio)
+  function setOtCorrectivo(){
+
+    var progr_corr = $('#fecha_progr_correct').val();
+    var hor_corr = $('#hora_progr_correct').val();
+
+    $.ajax({
+          type: 'POST', //parametros:parametros
+          data: {
+                  id_sol : id_sol,
+                  id_tarea : tarea,
+                  fecha_progr : progr_corr,
+                  hora_progr : hor_corr,
+                  fecha_inicio : fecha_solicit,
+                  descripcion : desc_causa,
+                  tipo : 2, // correctivo
+                  ide : id_eq,
+                  mes : mes
+                },
+          url: 'index.php/Calendario/guardar_agregar',  //index.php/
+          success: function(data){
+
+                   setTimeout("cargarView('Calendario', 'indexot', '"+$('#permission').val()+"');",0);
+                },
+          error: function(result){
+
+                console.log(result);
+              }
+    });
+  }
+//////////  / CORRECTIVO (Listoooo)
+
+//////////  PREVENTIVO (Listoooo)
+  var id_tar = "";
+  var fec_sol_prev = "";
+  var id_prev = "";
+  var id_equ = "";
+  var desc_tarea = "";  
+
+  function fill_Prevent(dato){    
+     
+      $.ajax({
+          type: 'POST', //parametros:parametros
+          data: {id:dato},
+          url: 'index.php/Calendario/getPrevPorId',  //index.php/
+          success: function(data){
+
+                  console.log('prenevtivos: ');
+                  id_tar = data[0]['id_tarea'];
+                  fec_sol_prev = data[0]['ultimo'];
+                  id_prev = data[0]['prevId'];
+                  id_equ = data[0]['id_equipo'];
+                  desc_tarea = data[0]['descripcion'];
+                },
+          error: function(data){
+
+                console.log(data);
+              },
+          dataType: 'json'    
+      });      
+  }
+
+  function setOtPreventivo() {
+    var progr_corr = $('#fecha_progr_prevent').val();
+    var hora_prog_prevent = $('#hora_prog_prevent').val();
+    var event_Preventivo = $('#event_Preventivo').val();
+    var cant_meses_prev = $('#cant_meses_prev').val();
+
+    $.ajax({
+          type: 'POST', //parametros:parametros
+          data: {
+                  id_sol : id_prev,
+                  id_tarea : id_tar,
+                  fecha_progr : progr_corr,
+                  hora_progr : hora_prog_prevent,
+                  fecha_inicio : fec_sol_prev,
+                  descripcion : desc_tarea,
+                  tipo : 3, // preventivo
+                  ide : id_equ,
+                  event_tipo: event_Preventivo,
+                  cant_meses: cant_meses_prev
+                },
+          url: 'index.php/Calendario/guardar_agregar',  //index.php/
+          success: function(data){
+
+                   setTimeout("cargarView('Calendario', 'indexot', '"+$('#permission').val()+"');",0);
+                },
+          error: function(result){
+
+                console.log(result);
+              }
+    });
+  }
+
+  function CancPrevent(){
+     id_tar = "";
+     fec_sol_prev = "";
+     id_prev = "";
+     id_equ = "";
+     desc_tarea = "";
+  }
+  
+  //habilita/deshabilita el campo cantidad
+  $('#event_Preventivo').change(function(){
+    
+      if ( $(this).val() == 0 ) {
+
+        $('#cant_meses_prev').attr('disabled',true);
+      }else{
+        $('#cant_meses_prev').attr('disabled',false);
+      }    
+  });
+//////////  / PREVENTIVO 
+
+//////////  PREVENTIVO POR HORAS CAMBIAR VARIABLE IDP UREGNTTE
+  var id_tarhs = "";
+  var fec_sol_prevhs = "";
+  var id_prevhs = "";
+  var id_equhs = "";
+  var desc_tareahs = "";
+
+  $('.fa-history').click(function(){
+
+    id_tarhs = $(this).parents("tr").find("td").eq(1).html();  //id de solicitud de servicios
+    fec_sol_prevhs = $(this).parents("tr").find("td").eq(6).html();
+    desc_tareahs = $(this).parents("tr").find("td").eq(5).html(); 
+    id_prevhs = $(this).parents("tr").find("td").eq(3).html();
+    id_equhs = $(this).parents("tr").find("td").eq(2).html(); 
+
+  });
+
+  function setOtPrevHoras() {
+    var progr_corr_hs = $('#fecha_progr_prevent_horas').val();
+    var hora_progr_prevH = $('#hora_progr_prevH').val();
+
+    $.ajax({
+          type: 'POST', //parametros:parametros
+          data: {
+                  id_sol : id_prevhs,
+                  id_tarea : id_tarhs,
+                  fecha_progr : progr_corr_hs,
+                  hora_progr : hora_progr_prevH,
+                  fecha_inicio : fec_sol_prevhs,
+                  descripcion : desc_tareahs,
+                  idp : id_sol,
+                  tipo : 3, // preventivo
+                  ide : id_equhs
+                },
+          url: 'index.php/Calendario/guardar_agregar',  //index.php/
+          success: function(data){
+
+                   setTimeout("cargarView('Calendario', 'indexot', '"+$('#permission').val()+"');",0);
+                },
+          error: function(result){
+
+                console.log(result);
+              }
+    });
+  }
+
+  function CancPrevHoras(){
+     id_tarhs = "";
+     fec_sol_prevhs = "";
+     id_prevhs = "";
+     id_equhs = "";
+     desc_tareahs = "";
+  }
+//////////  / PREVENTIVO POR HORAS 
+
+
+
+//////////  BACKLOG (Listoooo)
+  var id_de_tar = "";
+  var fec_sol_back = "";
+  var desc_tarea_back = "";
+  var id_back = "";
+  var id_equi = "";
+
+  function fill_Backlog(dato){    
+     
+      $.ajax({
+          type: 'POST', //parametros:parametros
+          data: {id:dato},
+          url: 'index.php/Calendario/getBackPorId',  //index.php/
+          success: function(data){
+
+                   console.log('back: ');
+                   id_de_tar = data[0]['tarea_descrip'];
+                   fec_sol_back = data[0]['fecha'];
+                   id_back = data[0]['backId'];
+                   id_equi = data[0]['id_equipo'];
+                   desc_tarea_back = data[0]['descripcion'];///////ACAAAAAA FALTAAAAA
+                },
+          error: function(data){
+
+                console.log(data);
+              },
+          dataType: 'json'    
+      });      
+  }
+
+  function setOtBacklog() {
+    var progr_back = $('#fecha_progr_back').val();
+    var hora_progr_back = $('#hora_progr_back').val();
+    
+
+    $.ajax({
+          type: 'POST', //parametros:parametros
+          data: {
+                  id_sol : id_back,
+                  id_tarea : id_de_tar,
+                  fecha_progr : progr_back,
+                  hora_progr:hora_progr_back,
+                  fecha_inicio : fec_sol_back,
+                  descripcion : desc_tarea_back,                  
+                  tipo : 4, // backlog
+                  ide : id_equi
+                },
+          url: 'index.php/Calendario/guardar_agregar',  //index.php/
+          success: function(data){
+
+                   setTimeout("cargarView('Calendario', 'indexot', '"+$('#permission').val()+"');",0);
+                },
+          error: function(result){
+
+                console.log(result);
+              }
+    });
+  }
+
+  function CancBacklog(){
+     id_de_tar = "";
+     fec_sol_back = "";
+     desc_tarea_back = "";
+     id_back = "";
+     id_equi = "";
+  }
+//////////  / BACKLOG ()
+
+//////////  PREDICTIVO ()
+
+  // Variables globales para llenar al enviar
+  var tarea_descrip = "";   //id tarea
+  var idp = "";   // id predictivo
+  var ide = "";   // id equipo
+  var fecha_inicio = "";
+
+  function fill_Predictivo(dato){
+    $.ajax({
+          type: 'POST', //parametros:parametros
+          data: {id:dato},
+          url: 'index.php/Calendario/getPredictPorId',  
+          success: function(data){
+          //alert('sucess');
+                   tarea_descrip = data[0]['tarea_descrip'];
+                   fecha_inicio = data[0]['fecha'];
+                   idp = data[0]['predId'];
+                   ide = data[0]['id_equipo'];
+                   desc_tarea_back = data[0]['descripcion'];
+                },
+          error: function(data){
+
+                console.log(data);
+              },
+          dataType: 'json'    
+      });    
+  }
+
+  // Limpia variables
+  function CancPred(){
+     tarea_descrip = "";   //id tarea
+     idp = "";   // id predictivo
+     ide = "";   // id equipo
+     fecha_inicio = "";
+  }
+
+  ////Guarda OT desde Predictivo
+  function setOtPredictivo(){
+
+    var progr_pred = $('#fecha_progr_pred').val();
+    var hora_pred = $('#hora_progr_pred').val();
+    var event_Predic = $('#event_Predictivo').val() ;
+    var cant_meses_predic = $('#cant_meses_predic').val();
+    
+
+    $.ajax({
+          type: 'POST', //parametros:parametros
+          data: {
+                  id_sol : idp,
+                  id_tarea : tarea_descrip,
+                  fecha_progr : progr_pred,
+                  hora_progr : hora_pred,
+                  fecha_inicio : fecha_inicio,
+                  descripcion : 'Predictivo',                  
+                  tipo : 5, //predictivo
+                  ide : ide,
+                  event_tipo: event_Predic,
+                  cant_meses: cant_meses_predic
+                },
+          url: 'index.php/Calendario/guardar_agregar',  //index.php/
+          success: function(data){
+
+                   setTimeout("cargarView('Calendario', 'indexot', '"+$('#permission').val()+"');",0);
+                },
+          error: function(result){
+
+                console.log(result);
+              }
+    });
+  }
+
+  //habilita/deshabilita el campo cantidad
+  $('#event_Predictivo').change(function(){
+    
+      if ( $(this).val() == 0 ) {
+
+        $('#cant_meses_predic').attr('disabled',true);
+      }else{
+        $('#cant_meses_predic').attr('disabled',false);
+      }    
+  });
+//////////  / PREDICTIVO ()
+
+
+</script>
+<!-- Guardado de datos y validaciones -->
+
+<!-- Modal Correctivo-->
+<div class="modal fade" id="modal-correctivo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Creación de Orden de Trabajo</h4>
+      </div>
+      <div class="modal-body">
+        <h5>Seleccione la fecha de Programación</h5>
+        <div class="col-xs-4">Fecha:
+          <input type="text" id="fecha_progr_correct"  name="fecha_progr_correct" class="form-control input-md" />
+        </div>
+        <div class="col-xs-4">Hora:
+            <input type="time" name="hora_progr_correct" id="hora_progr_correct" class="form-control input-md">
+        </div>
+      </div>    
+      <div class="clearfix"></div> 
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="CancCorrec()">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="setOtCorrectivo()">Generar Orden</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Preventivo-->
+<div class="modal fade" id="modal-preventivo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Creación de Orden de Trabajo</h4>
+      </div>
+      <div class="modal-body">
+        <h5>Seleccione la fecha de Programación</h5>
+        <div class="col-xs-4">Fecha:
+          <input type="text" id="fecha_progr_prevent"  name="fecha_progr_prevent" class="form-control input-md" />
+        </div>  
+        <div class="col-xs-4">Hora:
+            <input type="time" name="hora_prog_prevent" id="hora_prog_prevent" class="form-control input-md">
+        </div>
+        <br><br> 
+        <div class="clearfix"></div> 
+        <h5>Seleccione programación</h5>
+        <div class="col-xs-4">Tipo de Evento
+          <select class="form-control input-md" id="event_Preventivo">
+            <option value="1">Unico</option>
+            <option value="2">Mensual</option>
+          </select>
+        </div>
+        <div class="col-xs-4">Cantidad Meses 
+          <input type="text" name="cant_meses_prev" id="cant_meses_prev" class="form-control input-md" disabled="disabled">
+        </div>
+      </div>
+      <div class="clearfix"></div>      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="CancPrevent()">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="setOtPreventivo()">Generar Orden</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Preventivo P/ Horas-->
+<div class="modal fade" id="modal-preventivo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Creación de Orden de Trabajo</h4>
+      </div>
+      <div class="modal-body">
+        <h5>Seleccione la fecha de Programación</h5>
+        <div class="col-xs-4">Fecha:
+          <input type="text" id="fecha_progr_prevent_horas"  name="fecha_progr_prevent_horas" class="form-control input-md" />
+        </div>
+        <div class="col-xs-4">Hora:
+            <input type="time" name="hora_progr_prevH" id="hora_progr_prevH" class="form-control input-md">
+        </div>         
+        
+      </div>
+      
+      <div class="clearfix"></div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="CancPrevHoras()">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="setOtPrevHoras()">Generar Orden</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Backlog-->
+<div class="modal fade" id="modal-backlog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Creación de Orden de Trabajo</h4>
+      </div>
+      <div class="modal-body">
+        
+          <h5>Seleccione la fecha de Programación</h5>
+          <div class="col-xs-4">Fecha:
+            <input type="text" id="fecha_progr_back"  name="fecha_progr_back" class="form-control input-md" />
+          </div>
+          <div class="col-xs-4">Hora:
+            <input type="time" name="hora_progr_back" id="hora_progr_back"  name="hora_progr_back" class="form-control input-md">
+          </div>         
+        
+      </div>
+      <div class="clearfix"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="CancBacklog()">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="setOtBacklog()">Generar Orden</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Predictivo-->
+<div class="modal fade" id="modal-fecha" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Creación de Orden de Trabajo</h4>
+      </div>
+      <div class="modal-body">
+        <h5>Seleccione la fecha de Programación</h5>
+        <div class="col-xs-4">Fecha:
+          <input type="text" id="fecha_progr_pred"  name="fecha_progr_pred" class="form-control input-md" />
+        </div>
+        <div class="col-xs-4">Hora:
+            <input type="time" name="hora_progr_pred" id="hora_progr_pred" class="form-control input-md">
+        </div>
+        <br><br> 
+        <div class="clearfix"></div> 
+        <h5>Seleccione programación</h5>
+        <div class="col-xs-4">Tipo de Evento
+          <select class="form-control input-md" id="event_Predictivo">
+            <option value="1">Unico</option>
+            <option value="2">Mensual</option>
+          </select>
+        </div>
+        <div class="col-xs-4">Cantidad Meses 
+          <input type="text" name="cant_meses_predic" id="cant_meses_predic" class="form-control input-md" disabled="disabled">
+        </div>
+      </div>
+      <div class="clearfix"></div> 
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="CancPred()">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="setOtPredictivo()">Generar Orden</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalPrevent" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><span id="modalAction_2">Orden de Trabajo</span></h4>
+      </div>
+      <div class="modal-body" id="modalPrev">
+        <table class="table table-condensed table-responsive modal_prev" id="modal_prev">
+            <thead>
+              <tr>
+                <th style="width: 5%;">Nº de Orden</th>                
+                <th style="width: 15%;">Equipo</th>
+                <th>Tarea</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="aceptar">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
