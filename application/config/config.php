@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/assetcloud';
+$config['base_url'] = 'http://sd-1041467-h00003.ferozo.net/desarrollo/assetbase/';
 
 /*
 |--------------------------------------------------------------------------
@@ -76,7 +76,7 @@ $config['url_suffix'] = '';
 | than english.
 |
 */
-$config['language']	= 'english';
+$config['language']	= 'spanish';
 
 /*
 |--------------------------------------------------------------------------
@@ -223,7 +223,7 @@ $config['allow_get_array'] = TRUE;
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 4;
 
 /*
 |--------------------------------------------------------------------------
@@ -324,7 +324,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '';
+$config['encryption_key'] = 'santaclara_session';
 
 /*
 |--------------------------------------------------------------------------
@@ -489,6 +489,8 @@ $config['compress_output'] = FALSE;
 |
 */
 $config['time_reference'] = 'local';
+date_default_timezone_set('America/Argentina/San_Juan');
+//date_default_timezone_set('Europe/Berlin');
 
 /*
 |--------------------------------------------------------------------------
