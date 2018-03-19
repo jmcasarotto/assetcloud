@@ -14,7 +14,51 @@ Date: 2017-09-28 16:00:47
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+-- -----------------------------------------------------
+-- Table `assetdb`.`tipo_cuentas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tipo_cuentas` (
+`idtipo_cuentas` INT NOT NULL AUTO_INCREMENT,
+`descripcion` VARCHAR(45) NULL,
+PRIMARY KEY (`idtipo_cuentas`))
+ENGINE = InnoDB;
 
+INSERT INTO `tipo_cuentas` VALUES (1,'Free');
+
+-- -----------------------------------------------------
+-- Table `assetdb`.`cuentas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `cuentas` (
+`idcuentas` INT NOT NULL AUTO_INCREMENT,
+`descripcion` VARCHAR(45) NULL,
+`tipo_cuentas_idtipo_cuentas` INT NOT NULL,
+PRIMARY KEY (`idcuentas`),
+INDEX `fk_cuentas_tipo_cuentas_idx` (`tipo_cuentas_idtipo_cuentas` ASC),
+CONSTRAINT `fk_cuentas_tipo_cuentas`
+FOREIGN KEY (`tipo_cuentas_idtipo_cuentas`)
+REFERENCES `assetdb`.`tipo_cuentas` (`idtipo_cuentas`)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+INSERT INTO `cuentas` VALUES (1,'Gratis',1);
+-- -----------------------------------------------------
+-- Table `assetdb`.`clientes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `clientes` (
+`idclientes` INT NOT NULL AUTO_INCREMENT,
+`nombre` VARCHAR(45) NULL,
+`cuentas_idcuentas` INT NOT NULL,
+PRIMARY KEY (`idclientes`),
+INDEX `fk_clientes_cuentas1_idx` (`cuentas_idcuentas` ASC),
+CONSTRAINT `fk_clientes_cuentas1`
+FOREIGN KEY (`cuentas_idcuentas`)
+REFERENCES `assetdb`.`cuentas` (`idcuentas`)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+INSERT INTO `clientes` VALUES (1,'PAP',1);
 -- ----------------------------
 -- Table structure for confzone
 -- ----------------------------
@@ -54,17 +98,22 @@ CREATE TABLE `empresas` (
   `empcelular` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
   `zonaId` int(11) DEFAULT NULL,
   `emlogo` blob,
-  PRIMARY KEY (`id_empresa`)
+  `clientes_idclientes` INT NULL,
+  PRIMARY KEY (`id_empresa`),
+  FOREIGN KEY (`clientes_idclientes`)
+  REFERENCES `clientes` (`idclientes`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of empresas
 -- ----------------------------
-INSERT INTO `empresas` VALUES ('1', 'Hospital Dr. Guillermo Rawson', '20111111119', 'Av. Guillermo Rawson 494 sur', '0264 422-4005', 'controloperatihrawson@gmail.com', null, null, null, null, null, '', '12', null);
-INSERT INTO `empresas` VALUES ('2', 'Oficinas Ayinco', '30125612569', 'Caseros 619 Sur', '0264 427-4296', '', null, null, null, null, null, '', '12', null);
-INSERT INTO `empresas` VALUES ('3', 'Finning', '27111111116', 'Gral. Mariano Acha 1476', '0264 427-2829', null, null, null, null, null, null, null, null, null);
-INSERT INTO `empresas` VALUES ('4', 'Clorox S.A.', '20989898985', 'Av. Benavidez 4845 oeste', '0264 423-6464', '', null, null, null, null, null, '', '10', null);
-INSERT INTO `empresas` VALUES ('5', 'Hospital Ventura Lloveras', '21221458977', '25 de Mayo 230', '0264 494-1004', null, null, null, null, null, null, null, null, null);
+INSERT INTO `empresas` VALUES ('1', 'Hospital Dr. Guillermo Rawson', '20111111119', 'Av. Guillermo Rawson 494 sur', '0264 422-4005', 'controloperatihrawson@gmail.com', null, null, null, null, null, '', '12', null, null);
+INSERT INTO `empresas` VALUES ('2', 'Oficinas Ayinco', '30125612569', 'Caseros 619 Sur', '0264 427-4296', '', null, null, null, null, null, '', '12', null, null);
+INSERT INTO `empresas` VALUES ('3', 'Finning', '27111111116', 'Gral. Mariano Acha 1476', '0264 427-2829', null, null, null, null, null, null, null, null, null, null);
+INSERT INTO `empresas` VALUES ('4', 'Clorox S.A.', '20989898985', 'Av. Benavidez 4845 oeste', '0264 423-6464', '', null, null, null, null, null, '', '10', null, null);
+INSERT INTO `empresas` VALUES ('5', 'Hospital Ventura Lloveras', '21221458977', '25 de Mayo 230', '0264 494-1004', null, null, null, null, null, null, null, null, null, null);
 
 -- ----------------------------
 -- Table structure for sisactions
@@ -238,4 +287,27 @@ INSERT INTO `sisusers` VALUES ('2', 'uco', 'Operario', 'Operario', '0', 'ee11cbb
 INSERT INTO `sisusers` VALUES ('3', 'soporte', 'Soporte', 'Trazalog', '0', '855fa866d6d3f72f6a50bc213244e36d', '1', '');
 INSERT INTO `sisusers` VALUES ('4', 'insumos', 'Insumos', 'Pañol', '0', '3c6ff27f8f4c3efa42bcee681d78589f', '3', '');
 INSERT INTO `sisusers` VALUES ('5', 'supervisor', 'Supervisor', 'Supervisor', '0', '09348c20a019be0318387c08df7a783d', '5', '');
+
+-- -----------------------------------------------------
+-- Table `assetdb`.`usuarios_has_empresa`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `usuarios_has_empresa` (
+`usuarios_idusuarios` INT NOT NULL,
+`empresa_idempresa` INT NOT NULL,
+`id` INT NOT NULL,
+INDEX `fk_usuarios_has_empresa_usuarios1_idx` (`usuarios_idusuarios` ASC),
+INDEX `fk_usuarios_has_empresa_empresa1_idx` (`empresa_idempresa` ASC),
+PRIMARY KEY (`id`),
+CONSTRAINT `fk_usuarios_has_empresa_usuarios1`
+FOREIGN KEY (`usuarios_idusuarios`)
+REFERENCES `sisusers` (`usrId`)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION,
+CONSTRAINT `fk_usuarios_has_empresa_empresa1`
+FOREIGN KEY (`empresa_idempresa`)
+REFERENCES `empresas` (`id_empresa`)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 SET FOREIGN_KEY_CHECKS=1;
