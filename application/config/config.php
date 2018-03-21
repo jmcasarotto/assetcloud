@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://sd-1041467-h00003.ferozo.net/desarrollo/assetbase/';
+$config['base_url'] = 'http://localhost/trazalog/desarrollo/assetcloud/';
 
 /*
 |--------------------------------------------------------------------------
