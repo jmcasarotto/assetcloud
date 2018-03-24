@@ -14,38 +14,55 @@
         <div class="box-body">
           <div class="row">
               <div class="col-md-6 col-xs-12"> <!-- class="daterange"-->
+                <h3><center>Disponibilidad [%]</center></h3>
                   <?php $disponibilidad = calcularDisponibilidad('all');
                   /*
                   echo "<pre>";
-                  echo json_encode($disponibilidad["porcentajeHorasOperativas"]);
+                  echo json_encode(array_values($disponibilidad["tiempo"]));
                   echo "</pre>";
                   */
                   ?>
-                <h3><center>Disponibilidad [%]</center></h3>
-                <div data-disponibilidad="">
-                  <!--<select name="equipos" class="form-control">
-                    <option value="all" selected="selected">Todos</option>
-                    <option value="1">Equipo 1</option>
-                    <option value="2">Equipo 2</option>
-                  </select>-->
+                  <script type="text/javascript">
+                    var porcentajeHorasOperativas = <?php echo json_encode( array_values($disponibilidad["porcentajeHorasOperativas"]) ) ?>;
+                    var tiempo = <?php echo json_encode( array_values($disponibilidad["tiempo"]) ) ?>;
+                  </script>
+
+                <div class="row">
+                  <div class="col-md-6 col-xs-12">
+                    <div data-disponibilidad="">
+                      <label>Seleccione el equipo: </label>
+                      <input type="hidden" id="id_equipo" name="id_equipo">
+                      <select class="form-control input-medium" id="equipo" name="equipo" >
+                          <!--
+                          -->
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 col-xs-12 daterange-disponibilidad">
+                    <label>Rango de fechas: </label>
+                    <input type="text" id="daterange-disponibilidad" class="form-control">
+                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+
+                    <style>
+                    .daterange-disponibilidad i {
+                        position: absolute;
+                        bottom: 10px;
+                        right: 24px;
+                        top: auto;
+                        cursor: pointer;
+                    }
+                    </style>
+                 </div>
                 </div>
-                <div class="form-inline">
-                  <!--<label>Rango de fechas: </label>
-                  <input type="text" id="daterange-disponibilidad" class="form-control">
-                  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>-->
-                </div>
+
                 <div id="graph-container">
-                  <canvas id="miGrafico" style="width: 100%; margin:0 auto"></canvas>
+                  <canvas id="graficoDisponibilidad" style="width: 100%; margin:0 auto"></canvas>
                 </div>
               </div>
 
               <div class="col-md-3 col-xs-12 daterange">
                 <h3><center>Mantenimiento [%]</center></h3>
-                <div class="form-inline">
-                  <!--<label>Rango de fechas: </label>
-                  <input type="text" id="daterange-mantenimiento" class="form-control">
-                  <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>-->
-                </div>
                 <div class="graph-container-1" style="width:100%; max-width: 250px; margin:0 auto 20px;">
                       <canvas id="graficoMantenimiento"></canvas>
                   </div>
@@ -242,7 +259,48 @@
   }
 </style>
 
+
+
 <script>
+$(document).ready( function(event) {
+    traerEquipos();
+});
+
+/* Trae todos los equipos */
+function traerEquipos() {
+    $.ajax({
+        type: 'POST',
+        data: {},
+        dataType: 'json',
+        url: 'index.php/Grafica/getEquipos',
+        success: function(data){
+            console.info("equipos cargados exitosamente");
+
+            var opcion  = "<option value='all'>Todos los equipos</option>";
+            $('#equipo').append(opcion);
+            for(var i=0; i < data.length ; i++)
+            {
+                var nombre = data[i]['codigo'];
+                var opcion  = "<option value='"+data[i]['id_equipo']+"' title='"+data[i]['descripcion']+"' data-toggle='tooltip'>" +nombre+ "</option>" ;
+
+                $('#equipo').append(opcion);
+            }
+        },
+        error: function(result){
+            //alert(result);
+            console.error("problemas al traer los equipos: " + result);
+        },
+    });
+}
+</script>
+
+
+
+<script>
+var equipos                   = 'all';
+var porcentajeHorasOperativas = <?php echo json_encode( array_values($disponibilidad["porcentajeHorasOperativas"]) ) ?>;
+var tiempo                    = <?php echo json_encode( array_values($disponibilidad["tiempo"]) ) ?>;
+
 var locale = {
   "format": "DD/MM/YYYY",
   "separator": " - ",
@@ -276,59 +334,248 @@ var locale = {
   ],
   "firstDay": 1
 };
+
+var date = new Date();
+var dateToday      = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+//var date7days      = moment().subtract(7,'d').format('YYYY/MM/DD');
+//alert(date7days);
+var date7days      = new Date(date.getFullYear(), date.getMonth(), -6);
+var date30days     = new Date(date.getFullYear(), date.getMonth(), -30);
+var dateThisMonth1 = new Date(date.getFullYear(), date.getMonth(), 1);     // dia 1 de mes actual
+var dateThisMonth2 = new Date(date.getFullYear(), date.getMonth() + 1, 0); // ultimo dia del mes actual
+var dateLastMonth1 = new Date(date.getFullYear(), date.getMonth() -1, 1);  // dia 1 del mes anterior
+var dateLastMonth2 = new Date(date.getFullYear(), date.getMonth(), 0);     // ultimo dia del mes anterior
+var date6months    = new Date(date.getFullYear(), date.getMonth() -5);     // 6 meses = este mes + 5
+var date1year      = new Date(date.getFullYear(), date.getMonth() -11);    // 12 meses = este mes + 11
+
+var fechainicio = moment(date1year).format('YYYY/MM/DD');
+var fechafin    = dateToday;
+
+/*
+var fechainicio = moment(date1year).format('YYYY/MM/DD');
+var fechafin    = moment(dateToday).format('YYYY/MM/DD');
+dateToday      = moment(dateToday).format('YYYY/MM/DD');
+date7days      = moment(date7days).format('YYYY/MM/DD');
+date30days     = moment(date30days).format('YYYY/MM/DD');
+dateThisMonth1 = moment(dateThisMonth1).format('YYYY/MM/DD');
+dateThisMonth2 = moment(dateThisMonth2).format('YYYY/MM/DD');
+dateLastMonth1 = moment(dateLastMonth1).format('YYYY/MM/DD');
+dateLastMonth2 = moment(dateLastMonth2).format('YYYY/MM/DD');
+date6months    = moment(date6months).format('YYYY/MM/DD');
+date1year      = moment(date1year).format('YYYY/MM/DD');
+*/
 var ranges = {
-  "Hoy": [
-    "17-11-2017T14:57:40.858Z",
-    "17-11-2017T14:57:40.858Z"
-  ],
-  "Ayer": [
-    "16-11-2017T14:57:40.858Z",
-    "16-11-2017T14:57:40.858Z"
-  ],
   "Últimos 7 días": [
-    "11-11-2017T14:57:40.858Z",
-    "17-11-2017T14:57:40.858Z"
+    date7days,
+    dateToday
   ],
   "Últimos 30 días": [
-    "19-10-2017T14:57:40.858Z",
-    "17-11-2017T14:57:40.858Z"
+    date30days,
+    dateToday
   ],
   "Este mes": [
-    "01-11-2017T03:00:00.000Z",
-    "01-12-2017T02:59:59.999Z"
+    dateThisMonth1,
+    dateThisMonth2
   ],
   "Mes anterior": [
-    "01-10-2017T03:00:00.000Z",
-    "01-11-2017T02:59:59.999Z"
+    dateLastMonth1,
+    dateLastMonth2
+  ],
+  "Últimos 6 meses": [
+    date6months,
+    dateThisMonth2
+  ],
+  "Último año": [
+    date1year,
+    dateThisMonth2
   ]
 };
-var dateToday = Date.now();
-var date7days = moment().subtract(7,'d').format('DD/MM/YYYY');
 
+//alert(ranges["Últimos 7 días"]);
 $('#daterange-disponibilidad').daterangepicker({
   "locale": locale,
     "ranges": ranges,
-    "startDate": date7days,
+    "startDate": date1year,
     "endDate": dateToday
 }, function(start, end, label) {
-  console.log("New date range selected: ' + start.format('DD/MM/YYYY') + ' to ' + end.format('DD/MM/YYYY') + ' (predefined range: ' + label + ')");
-  alert("rango de fechas: "+ start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'))
+  console.log('New date range selected: ' + start.format('YYYY/MM/DD') + ' to ' + end.format('YYYY/MM/DD') + ' (predefined range: ' + label + ')');
+  fechainicio = start.format('YYYY/MM/DD');
+  fechafin    = end.format('YYYY/MM/DD');
+  var parametros = {
+    'idEquipo'    : equipos,
+    'fechaInicio' : fechainicio,
+    'fechaFin'    : fechafin,
+  };
+  $.ajax({
+      data: { parametros: parametros },
+      dataType: 'json',
+      type: 'POST',
+      url: 'index.php/dash/disponibilidad',  //index.php/
+
+      success: function(data){
+          equipos = 1;
+          tiempo = data.tiempo;
+          porcentajeHorasOperativas = data.porcentajeHorasOperativas;
+          graficarDisponibilidad();
+      },
+      error: function(result){
+          console.log('Error');
+      }
+  });
+});
+
+/* trae parametros al seleccionar el equipo */
+$("#equipo").on("change", function() {
+  //console.info('New date range selected: ' + start.format('YYYY/MM/DD') + ' to ' + end.format('YYYY/MM/DD') + ' (predefined range: ' + label + ')');
+  //alert('fecha inicio: '+fechaInicio+' - fecha fin: '+fechafin);
+  var parametros = {
+    'idEquipo'    : $(this).val(),
+    'fechaInicio' : fechainicio,
+    'fechaFin'    : fechafin,
+  };
+  $.ajax({
+      data: { parametros: parametros },
+      dataType: 'json',
+      type: 'POST',
+      url: 'index.php/dash/disponibilidad',  //index.php/
+
+      success: function(data){
+          equipos = 1;
+          tiempo = data.tiempo;
+          porcentajeHorasOperativas = data.porcentajeHorasOperativas;
+          graficarDisponibilidad();
+      },
+      error: function(result){
+          console.log('Error');
+      }
+  });
+
 });
 
 
-var dateToday = Date.now();
-var date7days = moment().subtract(7,'d').format('DD/MM/YYYY');
 
-$('#daterange-mantenimiento').daterangepicker({
-  "locale": locale,
-    "ranges": ranges,
-    "startDate": date7days,
-    "endDate": dateToday
-}, function(start, end, label) {
-  console.log("New date range selected: ' + start.format('DD/MM/YYYY') + ' to ' + end.format('DD/MM/YYYY') + ' (predefined range: ' + label + ')");
-  alert("rango de fechas: "+ start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'))
-});
+graficarDisponibilidad();
+/**/
+function graficarDisponibilidad() {
+
+  //elimino el canvas, por si hay un grafico preexistente. Para que no haya conflicto entre graficos. Y lo vuelvo a crear.
+  $('#graficoDisponibilidad').remove();
+  $('#graph-container').append('<canvas id="graficoDisponibilidad" style="width: 100%; margin:0 auto"></canvas>');
+
+  var ctx = document.getElementById("graficoDisponibilidad");
+  //var ctx = canvas.getContext("2d");
+
+  var horizonalLinePlugin = {
+    afterDraw: function(chartInstance) {
+      var yScale = chartInstance.scales["y-axis-0"];
+      var canvas = chartInstance.chart;
+      var ctx = canvas.ctx;
+      var index;
+      var line;
+      var style;
+
+      if (chartInstance.options.horizontalLine) {
+        for (index = 0; index < chartInstance.options.horizontalLine.length; index++) {
+          line = chartInstance.options.horizontalLine[index];
+
+          if (!line.style) {
+            style = "#86888e";
+          } else {
+            style = line.style;
+          }
+
+          if (line.y) {
+            yValue = yScale.getPixelForValue(line.y);
+          } else {
+            yValue = 0;
+          }
+
+          ctx.lineWidth = 2;
+
+          if (yValue) {
+            ctx.beginPath();
+            ctx.moveTo(0, yValue);
+            ctx.lineTo(canvas.width, yValue);
+            ctx.strokeStyle = style;
+            ctx.stroke();
+          }
+
+          if (line.text) {
+            ctx.fillStyle = style;
+            ctx.fillText(line.text, 0, yValue + ctx.lineWidth);
+          }
+        }
+        return;
+      };
+    }
+  };
+  Chart.pluginService.register(horizonalLinePlugin);
+
+  porcentajeHorasOperativas = [80].concat( porcentajeHorasOperativas );
+  tiempo = ["meta"].concat( tiempo );
+
+  var data = {
+    labels: tiempo,
+    //labels: ['Meta', '2017-04', '2017-05'],
+    //['Meta', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    datasets: [{
+      backgroundColor: ["#009900"],
+      data: porcentajeHorasOperativas,
+      //data : [80, 100, 52],//[80, 66, 70, 71, 75, 81, 77, 78, 77, 82, 81, 78, 80],
+      fill: false,
+      label: ['Meta'],
+      lineTension: 0.2,
+      pointRadius: 2,
+      pointHitRadius: 10,
+      spanGaps: false,
+    }],
+  };
+
+  var miGrafico = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: {
+      "horizontalLine": [{
+        "y": 80,
+        "style": "#009900",
+        "text": "meta"
+      }],
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        yAxes: [{
+          ticks: {
+            //max: 100,
+            //beginAtZero:true,
+          }
+        }]
+      },
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data) {
+            //get the concerned dataset
+            var dataset = data.datasets[tooltipItem.datasetIndex];
+            //get the current items value
+            var currentValue = dataset.data[tooltipItem.index];
+            return currentValue + "%";
+          }
+        }
+      }
+    }
+  });
+}
+
+
+
+
+
+
+
+
 </script>
+
+
+
 
 
 <script>
@@ -443,111 +690,6 @@ function graficarEquiposOperativos() {
             }
         }
     });
-}
-
-graficarParametro();
-/**/
-function graficarParametro() {
-
-  var ctx = document.getElementById("miGrafico");
-  //var ctx = canvas.getContext("2d");
-
-  var horizonalLinePlugin = {
-    afterDraw: function(chartInstance) {
-      var yScale = chartInstance.scales["y-axis-0"];
-      var canvas = chartInstance.chart;
-      var ctx = canvas.ctx;
-      var index;
-      var line;
-      var style;
-
-      if (chartInstance.options.horizontalLine) {
-        for (index = 0; index < chartInstance.options.horizontalLine.length; index++) {
-          line = chartInstance.options.horizontalLine[index];
-
-          if (!line.style) {
-            style = "#86888e";
-          } else {
-            style = line.style;
-          }
-
-          if (line.y) {
-            yValue = yScale.getPixelForValue(line.y);
-          } else {
-            yValue = 0;
-          }
-
-          ctx.lineWidth = 2;
-
-          if (yValue) {
-            ctx.beginPath();
-            ctx.moveTo(0, yValue);
-            ctx.lineTo(canvas.width, yValue);
-            ctx.strokeStyle = style;
-            ctx.stroke();
-          }
-
-          if (line.text) {
-            ctx.fillStyle = style;
-            ctx.fillText(line.text, 0, yValue + ctx.lineWidth);
-          }
-        }
-        return;
-      };
-    }
-  };
-  Chart.pluginService.register(horizonalLinePlugin);
-  var porcentajeHorasOperativas = [80].concat(<?php echo json_encode($disponibilidad["porcentajeHorasOperativas"]); ?>);
-  var tiempo = ["meta"].concat(<?php echo json_encode($disponibilidad["tiempo"]); ?>);
-
-  var data = {
-    labels: tiempo,
-    //['Meta', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-    datasets: [{
-      backgroundColor: ["#009900"],
-      data: porcentajeHorasOperativas,
-      //[80, 66, 70, 71, 75, 81, 77, 78, 77, 82, 81, 78, 80],
-      fill: false,
-      label: ['Meta'],
-      lineTension: 0.2,
-      pointRadius: 2,
-      pointHitRadius: 10,
-      spanGaps: false,
-    }],
-  };
-
-  var miGrafico = new Chart(ctx, {
-    type: 'bar',
-    data: data,
-    options: {
-      "horizontalLine": [{
-        "y": 80,
-        "style": "#009900",
-        "text": "meta"
-      }],
-      responsive: true,
-      maintainAspectRatio: true,
-      scales: {
-        yAxes: [{
-          ticks: {
-            //max: 100,
-            //beginAtZero:true,
-          }
-        }]
-      },
-      tooltips: {
-        callbacks: {
-          label: function(tooltipItem, data) {
-            //get the concerned dataset
-            var dataset = data.datasets[tooltipItem.datasetIndex];
-            //get the current items value
-            var currentValue = dataset.data[tooltipItem.index];
-            return currentValue + "%";
-          }
-        }
-      }
-    }
-  });
 }
 </script>
 
@@ -816,37 +958,8 @@ function completarEdit(datos){
   traer_sucursal2();
 }
 
-// function LoadOT(id_, action){
-//   idArt = id_;
-//   acArt = action;
-//   LoadIconAction('modalAction',action);
-//   WaitingOpen('Cargando Orden de trabajo');
-//   $.ajax({
-//           type: 'POST',
-//           data: { id : id_, act: action },
-//     		  url: 'index.php/otrabajo/getotrabajo',
-//     		    success: function(result){
-// 			                WaitingClose();
-// 			                $("#modalBodyOT").html(result.html);
-//                       $('#vfech').datepicker({
-//                         changeMonth: true,
-//                         changeYear: true
-//                       });
-// 			                setTimeout("$('#modalOT').modal('show')",800);
-
-//     					},
-//     		    error: function(result){
-//     					WaitingClose();
-//     					alert("error");
-//     				},
-//           dataType: 'json'
-//   });
-
-// }
-
-function traer_clientes(idcliente){
-
-     $('#cliente').html("");
+function traer_clientes(idcliente) {
+    $('#cliente').html("");
     $.ajax({
           type: 'POST',
           data: { idcliente: idcliente},
@@ -871,31 +984,6 @@ function traer_clientes(idcliente){
               dataType: 'json'
     });
 }
-
-
-// function finalOT(id_, action){ //esto es nuevo
-
-//   idot = id_;
-//   ac = action;
-//   est='T';
-//   LoadIconAction('modalAction',action);
-//   WaitingOpen('Finalizando');
-//   $.ajax({
-//           type: 'POST',
-//           data: { id : id_, act: action,estado:est },
-//           url: 'index.php/otrabajo/setfinal',
-//             success: function(data){
-//                       WaitingClose();
-
-
-//             },
-//             error: function(result){
-//               WaitingClose();
-//               alert("error");
-//             },
-//             dataType: 'json'
-//   });
-// }
 
 traer_usuario();
 function traer_usuario(){
@@ -1140,7 +1228,7 @@ function guardareditar(){
                // var data = jQuery.parseJSON( result );
                console.log("Exito en la edicion");
                 console.log(data);
-               /* $('#modalAsig').modal('hide');*/
+               /* $('#modalAsig').modal('hide'); */
 
                  setTimeout(function(){
                        var permisos = '<?php //echo $permission; ?>';
@@ -1353,7 +1441,7 @@ function regresa1(){
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title"><span  class="fa fa-thumb-tack " style="color: #006400"></span>   Asignacion Orden de trabajo</h4>
       </div>
       <div class="modal-body">
@@ -1381,4 +1469,299 @@ function regresa1(){
 
                       </div>
                       <div class="col-xs-12">
-                        <textarea  class="form-control" rows="6" cols="500" id="descripcion" name="descripcion" value="" disabled >
+                        <textarea  class="form-control" rows="6" cols="500" id="descripcion" name="descripcion" value="" disabled ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" >
+                    <div class="col-sm-12 col-md-12">
+                      <div class="col-xs-8">Fecha de entrega:
+                        <input type="date" id="fecha_entrega" name="fecha_entrega" class="form-control input-md" / >
+                      </div>
+                      <br>
+                      <br>
+                      <div  class="col-xs-8">Usuario:
+                        <select id="usuario" name="usuario" class="form-control " placeholder="Seleccione usuario" value="" ></select>
+                      <input type="hidden" id="id_usuario" name="id_usuario">
+                      </div>
+                      <br>
+                      <br>
+                      <div class="col-xs-3">
+
+                      </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal" onclick="cerro()">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="reset" data-dismiss="modal" onclick="orden()">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal editar-->
+<div class="modal fade" id="modaleditar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document" style="width: 40%">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"  id="myModalLabel"><span id="modalAction" class="fa fa-fw fa-pencil" style="color: #f39c12" > </span> Editar Orden de Trabajo</h4>
+       </div> <!-- /.modal-header  -->
+
+      <div class="modal-body input-group ui-widget" id="modalBodyArticle">
+
+        <div class="row">
+          <div class="col-xs-4">
+           <label style="margin-top: 7px;">Nro <strong style="color: #dd4b39">*</strong>: </label>
+          </div>
+          <div class="col-xs-8">
+            <input type="text" class="form-control" placeholder="Nro Orden de trabajo" id="nroedit" name="nroedit">
+          </div>
+        </div><br>
+        <div class="row">
+          <div class="col-xs-4">
+            <label style="margin-top: 7px;">Cliente <strong style="color: #dd4b39">*</strong>: </label>
+          </div>
+          <div class="col-xs-8">
+            <select class="form-control select2" id="cliidedit" name="cliidedit" style="width: 100%;">
+
+            </select>
+          </div>
+        </div><br>
+
+        <div class="row">
+          <div class="col-xs-4">
+              <label style="margin-top: 7px;">Fecha <strong style="color: #dd4b39">*</strong>: </label>
+          </div>
+          <div class="col-xs-8">
+              <input type="text" class="vfecha" id="vfecha" placeholder="dd-mm-aaaa" name="vfecha">
+          </div>
+        </div><br>
+
+        <div class="row">
+          <div class="col-xs-4">
+             <label style="margin-top: 7px;">Nota: </label>
+          </div>
+          <div class="col-xs-8">
+            <textarea placeholder="Orden de trabajo" class="form-control" rows="10" id="vsdetalleedit" name="vsdetalleedit" value=""></textarea>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-xs-4">
+              <label style="margin-top: 7px;">Sucursal <strong style="color: #dd4b39">*</strong>: </label>
+          </div>
+          <div class="col-xs-8">
+            <select class="form-control select2" id="sucidedit" name="sucidedit" style="width: 100%;">
+
+            </select>
+          </div>
+        </div>
+        <br>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" onclick="cerro()">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="reset" data-dismiss="modal" onclick="guardareditar()">Guardar</button>
+        </div>  <!-- /.modal footer -->
+      </div>
+    </div>  <!-- /.modal-body -->
+  </div> <!-- /.modal-content -->
+</div>  <!-- /.modal-dialog modal-lg -->
+</div>  <!-- /.modal fade -->
+<!-- / Modal -->
+
+<!-- Modal Pedido-->
+<div class="modal fade" id="modalpedido" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document" style="width: 45%">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"  id="myModalLabel"><span id="modalAction" class="fa fa-tags" style="color: #3c8dbc" > </span> Orden de Pedido</h4>
+       </div> <!-- /.modal-header  -->
+
+      <div class="modal-body input-group ui-widget" id="modalBodyArticle">
+
+        <div class="row" >
+          <div class="col-sm-12 col-md-12">
+            <fieldset> </fieldset>
+            <br>
+            <div class="col-xs-8">Nro:
+              <input type="text"  id="num1" name="num1" placeholder="Ingrese nro de orden de pedido.." size= "36">
+              <!--align=\"right\" -->
+            </div>
+            <div class="col-xs-8">Fecha:
+              <input type="text"   class=" datepicker" id="fecha1"  name="fecha1" size= "36"/>
+            </div>
+            <div class="col-xs-8">Fecha de Entrega:
+              <input type="text"  class=" datepicker"   id="fecha_entrega2" name="fecha_entrega2" size= "36" />
+            </div>
+            <div class="col-xs-8">Proveedor:
+              <select type="text"  class="form-control"  id="proveedor" name="proveedor"  value="" ></select>
+              <input type="hidden" id="id_proveedor" name="id_proveedor">
+            </div>
+
+            <div class="col-xs-8">Detalle del pedido:
+            </div>
+            <div class="col-xs-12">
+              <textarea  class="form-control input-md" rows="6" cols="500" id="descripcion2" name="descripcion2" value="" placeholder="Ingrese detalle del pedido..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" onclick="cerro()">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="btnSave" data-dismiss="modal" onclick="guardarpedido()" >Guardar</button>
+        </div>  <!-- /.modal footer -->
+      </div>  <!-- /.modal-body -->
+    </div> <!-- /.modal-content -->
+  </div>  <!-- /.modal-dialog modal-lg -->
+</div>  <!-- /.modal fade -->
+<!-- / Modal -->
+
+
+<!-- Modal mostrar pedido-->
+<div class="modal fade" id="modallista" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document" style="width: 70%">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"  id="myModalLabel"><span id="modalAction" class="fa fa-truck" style="color: #3c8dbc" > </span> Lista de Orden de Pedido</h4>
+       </div> <!-- /.modal-header  -->
+
+      <div class="modal-body input-group ui-widget" id="modalBodyArticle">
+
+        <div class="row" >
+          <div class="col-sm-12 col-md-12">
+            <fieldset> </fieldset>
+            <br>
+            <table class="table table-bordered table-hover" id="tabladetalle">
+              <thead>
+                <tr>
+                  <th width="10%"></th>
+                  <th>Nro de orden</th>
+                  <th>Fecha</th>
+                  <th>Fecha de Entrega</th>
+                  <th>Proveedor</th>
+                  <th>Descripcion</th>
+                  <th>Estado</th>
+
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>  <!-- /.modal-body -->
+    </div> <!-- /.modal-content -->
+  </div>  <!-- /.modal-dialog modal-lg -->
+</div>  <!-- /.modal fade -->
+<!-- / Modal -->
+
+<!-- Modal agregar-->
+<div class="modal fade" id="modalagregar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document" style="width: 40%">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"  id="myModalLabel"><span id="modalAction" class="fa fa-plus-square" style="color: #008000"  > </span> Orden de Trabajo</h4>
+       </div> <!-- /.modal-header  -->
+
+      <div class="modal-body input-group ui-widget" id="modalBodyArticle">
+
+        <div class="row">
+          <div class="col-xs-4">
+           <label style="margin-top: 7px;">Nro <strong style="color: #dd4b39">*</strong>: </label>
+          </div>
+          <div class="col-xs-8">
+            <input type="text" class="form-control"  id="nro1" name="nro1" placeholder="Ingrese Numero de OT">
+          </div>
+        </div><br>
+        <div class="row">
+          <div class="col-xs-4">
+            <label style="margin-top: 7px;">Cliente <strong style="color: #dd4b39">*</strong>: </label>
+          </div>
+          <div class="col-xs-8">
+            <select class="form-control " id="cli" name="cli" style="width: 100%;">
+
+            </select>
+          </div>
+        </div><br>
+
+        <div class="row">
+          <div class="col-xs-4">
+              <label style="margin-top: 7px;">Fecha <strong style="color: #dd4b39">*</strong>: </label>
+          </div>
+          <div class="col-xs-8">
+               <input type="text" class="form-control" id="vfech" name="vfech" value="<?php echo date_format(date_create(date("Y-m-d ")), 'd-m-Y') ; ?>"  disabled/>
+               <input type="hidden" class="form-control" id="vfechi" name="vfechi" value="<?php echo date('Y-m-d H:i:s') ; ?>"  disabled/>
+          </div>
+        </div><br>
+
+        <div class="row">
+          <div class="col-xs-4">
+             <label style="margin-top: 7px;">Nota: </label>
+          </div>
+          <div class="col-xs-8">
+            <textarea placeholder="Orden de trabajo" class="form-control" rows="10" id="vsdetal" name="vsdetal" value=""></textarea>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-xs-4">
+              <label style="margin-top: 7px;">Sucursal <strong style="color: #dd4b39">*</strong>: </label>
+          </div>
+          <div class="col-xs-8">
+            <select class="form-control select2" id="suci" name="suci" style="width: 100%;">
+
+            </select>
+          </div>
+        </div>
+        <br>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="cerro()">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="reset" data-dismiss="modal" onclick="guardaragregar()">Guardar</button>
+
+        </div>  <!-- /.modal footer -->
+      </div>  <!-- /.modal-body -->
+    </div> <!-- /.modal-content -->
+  </div>  <!-- /.modal-dialog modal-lg -->
+</div>  <!-- /.modal fade -->
+<!-- / Modal -->
+
+<!-- Modal FINALIZAR-->
+<div class="modal fade" id="modalfinalizar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document" style="width: 35%">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"  id="myModalLabel"><span id="modalAction" class="fa fa-fw fa fa-toggle-on" style="color: #3c8dbc" > </span> Finalización </h4>
+       </div> <!-- /.modal-header  -->
+
+      <div class="modal-body input-group ui-widget" id="modalBodyArticle">
+
+        <div class="row" >
+          <div class="col-sm-12 col-md-12">
+
+
+            <div class="col-sm-12 ">Elija la opción de finalización de orden:
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" onclick="guardarparcial()"> PARCIAL</button>
+              <button type="button" class="btn btn-primary" id="btnSave" data-dismiss="modal" onclick="guardartotal()" >TOTAL</button>
+            </div>  <!-- /.modal footer -->
+           </div>
+
+          </div>
+        </div>
+      </div>  <!-- /.modal-body -->
+    </div> <!-- /.modal-content -->
+  </div>  <!-- /.modal-dialog modal-lg -->
+</div>  <!-- /.modal fade -->
+<!-- / Modal -->

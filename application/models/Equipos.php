@@ -18,13 +18,13 @@ class Equipos extends CI_Model {
 	    	  JOIN area ON area.id_area=equipos.id_area
             JOIN proceso ON proceso.id_proceso=equipos.id_proceso
             WHERE equipos.estado!='AN'
-            
+
 	    	  ORDER BY equipos.codigo ASC
 
 
 	    	  ";
 
-	    
+
 	    $query= $this->db->query($sql);
         if ($query->num_rows()!=0)
         {
@@ -843,23 +843,29 @@ class Equipos extends CI_Model {
      */
     function kpiCalcularDisponibilidad($idEquipo, $fechaInicio=false, $fechaFin=false ) {
         $disponibilidad = array();
-
         // Si no hay una fecha específica saco los últimos 12 meses
         // (13 meses para saber el estado inicial de la primera lectura)
         if( $fechaInicio==false && $fechaFin==false) {
-            $fechaInicio = date("Y-m-d H:i:s");
-            $fechaFin    = strtotime($fechaInicio.' -12 month');//12 o 13...no me queda claro (si es 12 para atras es 12. pero si pone cada mes en una cajita, serian 13)
-            $fechaFin    = date('Y-m-d H:i:s', $fechaFin);
+            $fechaInicio = strtotime($fechaFin.' -11 month');//12 o 13...no me queda claro (si es 12 para atras es 12. pero si pone cada mes en una cajita, serian 13)
+            $fechaInicio = date('Y-m-d', $fechaInicio);
+            $fechaFin    = date("Y-m-d");
             //dump_exit($fechaFin);
         }
+        $fechaInicio = $fechaInicio." 00:00:00";
+        $fechaFin    = $fechaFin." 23:59:59";
 
+        //dump($idEquipo, "id equipo");
+        //dump($fechaInicio, "fecha inicio");
+        //dump($fechaFin, "fecha fin");
+
+        //dump_exit($fechaInicio);
         //trae el historial de lecturas
         $this->db->select('id_lectura, id_equipo, lectura, fecha, estado');
         $this->db->from('historial_lecturas');
         if( $idEquipo != "all" ) // si idequipo = 'all' => traigo todos los datos
             $this->db->where('id_equipo', $idEquipo);
-        $this->db->where('fecha <=', $fechaInicio);
-        $this->db->where('fecha >=', $fechaFin);
+        $this->db->where('fecha >=', $fechaInicio);
+        $this->db->where('fecha <=', $fechaFin);
         $this->db->order_by("fecha", "asc");
         $query = $this->db->get();
         $historial_lecturas = $query->result_array();
@@ -868,7 +874,7 @@ class Equipos extends CI_Model {
         /* para cada mes, agrego una lectura con el dia 1 a las 00:00:00hs y otro el ultimo dia del mes a las 23:59:59hs */
         /* el estado de esas lecturas se saca del elemento anterior y posterior */
         $historial_lecturas = $this->historialLectures12Meses($historial_lecturas);
-        //dump_exit($historial_lecturas);
+        //dump($historial_lecturas);
 
         $nroMeses = sizeof($historial_lecturas); //12 meses
         $j = 0;

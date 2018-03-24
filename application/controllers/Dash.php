@@ -88,7 +88,7 @@ class dash extends CI_Controller {
 
 		return $this->items;
 	}
-	
+
     public function calendar()
     {
         $this->load->model('Preventivos');
@@ -97,4 +97,16 @@ class dash extends CI_Controller {
         $this->load->view('calendar/calendar', $data);
     }
 
+    public function disponibilidad() {
+    	$datos = $_POST['parametros'];
+    	//dump_exit($datos["fechaInicio"]);
+    	$disponibilidad = calcularDisponibilidad($datos["idEquipo"], $datos["fechaInicio"], $datos["fechaFin"]);
+    	$tiempo       = json_encode( array_values($disponibilidad["tiempo"]) );
+    	$hsOperativas = json_encode( array_values($disponibilidad["porcentajeHorasOperativas"]) );
+
+    	$disponibilidad = '{ "tiempo": '.$tiempo.', "porcentajeHorasOperativas" : '.$hsOperativas.'}';
+
+    	//dump_exit( $disponibilidad );
+    	echo $disponibilidad;
+    }
 }
