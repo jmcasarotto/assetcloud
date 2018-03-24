@@ -171,5 +171,11 @@ class Users extends CI_Model
 		}
 	}
 
+    public function addUser($datos)
+    {
+        $this->db->insert('sisusers',$datos);
+        $lastid = $this->db->insert_id();
+        return $lastid;
+    }
 }
 ?>

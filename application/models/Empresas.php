@@ -143,6 +143,13 @@ class Empresas extends CI_Model
         return $query;
     }
 
+    public function addEmpresa($empresa)
+    {
+        $this->db->insert('empresas',$empresa);
+        $lastid = $this->db->insert_id();
+        return $lastid;
+    }
+
 }
 
 ?>

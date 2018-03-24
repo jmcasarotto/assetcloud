@@ -24,6 +24,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-8">
+                        <a href="registrarse">Registrarse</a>
 
                     </div><!-- /.col -->
                     <div class="col-xs-4">
