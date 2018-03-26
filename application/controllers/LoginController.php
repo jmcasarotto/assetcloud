@@ -12,6 +12,8 @@ class LoginController extends CI_Controller {
         $this->load->model('UsuarioEmpresa');
         $this->load->model('Paises');
         $this->load->model('Ciudades');
+        $this->load->model('Cuenta');
+        $this->load->model('Tipocuenta');
         $this->load->library('email');
         $this->load->library('form_validation');
     }
@@ -35,7 +37,12 @@ class LoginController extends CI_Controller {
         $this->load->helper('form');
         $this->load->view('header');
         $paises['paises'] = $this->Paises->getPaises();
-        $this->load->view('registro/registrarse',$paises);
+        $cuentas['cuentas'] = $this->Cuenta->getCuentas();
+        $data = array(
+            'paises' => $paises,
+            'cuentas' => $cuentas
+        );
+        $this->load->view('registro/registrarse',$data);
     }
 
     public function store()
@@ -73,6 +80,7 @@ class LoginController extends CI_Controller {
                 'localidadid' => $this->input->post('localidad'),
                 'paisid' => $this->input->post('pais'),
                 'provinciaid' => $this->input->post('provincia'),
+                'cuenta_cuentaid' => $this->input->post('tipocuenta'),
             );
 
             $usuarioid = $this->Users->addUser($user);

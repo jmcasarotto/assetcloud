@@ -67,7 +67,7 @@
                                 <select class="form-control" id="pais" name="pais">
                                     <option value="">-- SELECCIONE --</option>
                                     <?php
-                                    foreach($paises as $p)
+                                    foreach($paises['paises'] as $p)
                                     {
                                         echo '<option value="'.$p['Codigo'].'">'.$p['Pais'].'</option>';
                                     }
@@ -88,6 +88,33 @@
                                 <span class="label label-danger" id="localidaderror">Localidad incorrecta</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Tipo de cuenta</div>
+                    <div class="panel-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <?php
+                            foreach($cuentas['cuentas'] as $c)
+                            {
+                                echo '<div class="col-xs-4">
+                                        <div class="well">';
+                                echo '<h3>'.$c['cuentadescrip'].'</h3>';
+                                echo '<p>Usuarios: '.$c['tipocuentausuarios'].'</p>';
+                                echo '<p>Activos: '.$c['tipocuentaactivos'].'</p>';
+                                echo '<p>Unidades de negocios: '.$c['tipocuentaempresas'].'</p>';
+                                echo '<p>Apps: NO </p>
+                                      <p>Modulo Alerta: NO </p>';
+                                echo '<input type="radio" name="tipocuenta" value="'.$c['id'].' ">';
+                                echo '</div>
+                                </div>';
+                            }
+                            ?>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -161,7 +188,7 @@
                                 <select class="form-control" id="paisempresa" name="paisempresa">
                                     <option value="">-- SELECCIONE --</option>
                                     <?php
-                                    foreach($paises as $p)
+                                    foreach($paises['paises'] as $p)
                                     {
                                         echo '<option value="'.$p['Codigo'].'">'.$p['Pais'].'</option>';
                                     }
@@ -210,8 +237,6 @@
         $("#emailempresaerror").hide();
         $("#localidadempresaerror").hide();
         $("#errorimage").hide();
-
-//        $('#pais option[value="AR"]').attr("selected", "selected");
 
         $('#pais').change(function(e)
         {
@@ -281,62 +306,62 @@
             $("#passworderror").show();
             var hayError = true;
         }
-//        if($('#usrname').val() == '') {
-//            $("#usrnameerror").show();
-//            var hayError = true;
-//        }
-//        if($('#usrLastName').val() == '') {
-//            $("#usrLastNameError").show();
-//            var hayError = true;
-//        }
-//        if($('#razonsocial').val() == '') {
-//            $("#razonsocialerror").show();
-//            var hayError = true;
-//        }
-//        if($('#direccion').val() == '') {
-//            $("#direccionerror").show();
-//            var hayError = true;
-//        }
-//        if($('#localidad').val() == '') {
-//            $("#localidaderror").show();
-//            var hayError = true;
-//        }
-//        if($('#telefonofijo').val() == '') {
-//            $("#telefonofijoerror").show();
-//            var hayError = true;
-//        }
-//        if($('#celular').val() == '') {
-//            $("#celularerror").show();
-//            var hayError = true;
-//        }
-//        if($('#descripcion').val() == '') {
-//            $("#descripcionerror").show();
-//            var hayError = true;
-//        }
-//        if($('#emailempresa').val() == '') {
-//            $("#emailempresaerror").show();
-//            var hayError = true;
-//        }
-//        if($('#cuit').val() == '') {
-//            $("#cuiterror").show();
-//            var hayError = true;
-//        }
-//        if($('#direccionempresa').val() == '') {
-//            $("#direccionempresaerror").show();
-//            var hayError = true;
-//        }
-//        if($('#celularempresa').val() == '') {
-//            $("#celularempresaerror").show();
-//            var hayError = true;
-//        }
-//        if($('#localidadempresa').val() == '') {
-//            $("#localidadempresaerror").show();
-//            var hayError = true;
-//        }
-//        if($('#telefonoempresa').val() == '') {
-//            $("#telefonoempresaerror").show();
-//            var hayError = true;
-//        }
+        if($('#usrname').val() == '') {
+            $("#usrnameerror").show();
+            var hayError = true;
+        }
+        if($('#usrLastName').val() == '') {
+            $("#usrLastNameError").show();
+            var hayError = true;
+        }
+        if($('#razonsocial').val() == '') {
+            $("#razonsocialerror").show();
+            var hayError = true;
+        }
+        if($('#direccion').val() == '') {
+            $("#direccionerror").show();
+            var hayError = true;
+        }
+        if($('#localidad').val() == '') {
+            $("#localidaderror").show();
+            var hayError = true;
+        }
+        if($('#telefonofijo').val() == '') {
+            $("#telefonofijoerror").show();
+            var hayError = true;
+        }
+        if($('#celular').val() == '') {
+            $("#celularerror").show();
+            var hayError = true;
+        }
+        if($('#descripcion').val() == '') {
+            $("#descripcionerror").show();
+            var hayError = true;
+        }
+        if($('#emailempresa').val() == '') {
+            $("#emailempresaerror").show();
+            var hayError = true;
+        }
+        if($('#cuit').val() == '') {
+            $("#cuiterror").show();
+            var hayError = true;
+        }
+        if($('#direccionempresa').val() == '') {
+            $("#direccionempresaerror").show();
+            var hayError = true;
+        }
+        if($('#celularempresa').val() == '') {
+            $("#celularempresaerror").show();
+            var hayError = true;
+        }
+        if($('#localidadempresa').val() == '') {
+            $("#localidadempresaerror").show();
+            var hayError = true;
+        }
+        if($('#telefonoempresa').val() == '') {
+            $("#telefonoempresaerror").show();
+            var hayError = true;
+        }
 
         if(sizekiloBytes >  $('#file').attr('size'))
         {
@@ -367,7 +392,7 @@
                 },
                 error: function(result){
                     WaitingClose();
-                    alert(result);
+//                    alert(result);
                     //VER QUE MENSAJE MOSTRAR
 //                    alert('Hubo un error al realizar la operación!');
                 }
