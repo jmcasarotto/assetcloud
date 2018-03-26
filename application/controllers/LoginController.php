@@ -47,6 +47,29 @@ class LoginController extends CI_Controller {
 
     public function store()
     {
+        $user = array(
+                'usrNick' => $this->input->post('email'),
+                'usrName' => $this->input->post('usrname'),
+                'usrLastName' => $this->input->post('usrLastName'),
+                'usrPassword' => md5($this->input->post('password')),
+                'grpId' => 1,
+            );
+
+        $datos = array(
+                'clientrazonsocial' => $this->input->post('razonsocial'),
+                'clientdireccion' => $this->input->post('direccion'),
+                'clientmail' => $this->input->post('email'),
+                'clienttelefono' => $this->input->post('telefonofijo'),
+                'clientetelefono1' => $this->input->post('celular'),
+                'localidadid' => $this->input->post('localidad'),
+                'paisid' => $this->input->post('pais'),
+                'provinciaid' => $this->input->post('provincia'),
+                'cuenta_cuentaid' => $this->input->post('tipocuenta'),
+            );
+
+        $usuarioid = $this->Users->addUser($user);
+        $clienteid = $this->Clientes->addCliente($datos);
+
         $config['upload_path'] = './uploads/';
         $config['allowed_types'] = 'gif|jpg|png|jpeg';
         $config['max_size']    = '10000';
@@ -62,31 +85,9 @@ class LoginController extends CI_Controller {
             $image_minsize = $this->_create_thumbnail($data_upload_files['file_name']);
             $image = $image_minsize['upload_path'];
             $image_path = $this->upload->data($image);
+        }
 
-            $user = array(
-                'usrNick' => $this->input->post('email'),
-                'usrName' => $this->input->post('usrname'),
-                'usrLastName' => $this->input->post('usrLastName'),
-                'usrPassword' => md5($this->input->post('password')),
-                'grpId' => 1,
-            );
-
-            $datos = array(
-                'clientrazonsocial' => $this->input->post('razonsocial'),
-                'clientdireccion' => $this->input->post('direccion'),
-                'clientmail' => $this->input->post('email'),
-                'clienttelefono' => $this->input->post('telefonofijo'),
-                'clientetelefono1' => $this->input->post('celular'),
-                'localidadid' => $this->input->post('localidad'),
-                'paisid' => $this->input->post('pais'),
-                'provinciaid' => $this->input->post('provincia'),
-                'cuenta_cuentaid' => $this->input->post('tipocuenta'),
-            );
-
-            $usuarioid = $this->Users->addUser($user);
-            $clienteid = $this->Clientes->addCliente($datos);
-
-            $datosEmpresa = array(
+        $datosEmpresa = array(
                 'descripcion' => $this->input->post('descripcion'),
                 'empcuit' => $this->input->post('cuit'),
                 'empdir' => $this->input->post('direccionempresa'),
@@ -102,9 +103,9 @@ class LoginController extends CI_Controller {
                 'clienteid' => $clienteid
             );
 
-            $empresaid = $this->Empresas->addEmpresa($datosEmpresa);
-            $this->UsuarioEmpresa->addUsuarioEmpresa($usuarioid, $empresaid);
-        }
+        $empresaid = $this->Empresas->addEmpresa($datosEmpresa);
+        $this->UsuarioEmpresa->addUsuarioEmpresa($usuarioid, $empresaid);
+
 
     }
     function _create_thumbnail($filename){

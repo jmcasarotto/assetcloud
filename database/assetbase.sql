@@ -1,25 +1,35 @@
-/*
-Navicat MySQL Data Transfer
+-- phpMyAdmin SQL Dump
+-- version 4.7.4
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1:3307
+-- Tiempo de generación: 26-03-2018 a las 15:58:26
+-- Versión del servidor: 10.2.8-MariaDB
+-- Versión de PHP: 7.0.23
 
-Source Server         : localhost_3306
-Source Server Version : 50505
-Source Host           : localhost:3306
-Source Database       : assetbase
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
 
-Target Server Type    : MYSQL
-Target Server Version : 50505
-File Encoding         : 65001
 
-Date: 2018-03-19 11:34:38
-*/
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-SET FOREIGN_KEY_CHECKS=0;
+--
+-- Base de datos: `assetdb`
+--
 
--- ----------------------------
--- Table structure for abmdeposito
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `abmdeposito`
+--
+
 DROP TABLE IF EXISTS `abmdeposito`;
-CREATE TABLE `abmdeposito` (
+CREATE TABLE IF NOT EXISTS `abmdeposito` (
   `depositoId` int(11) NOT NULL AUTO_INCREMENT,
   `depositodescrip` varchar(255) DEFAULT NULL,
   `direccion` varchar(255) DEFAULT NULL,
@@ -30,11 +40,14 @@ CREATE TABLE `abmdeposito` (
   PRIMARY KEY (`depositoId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for abmproveedores
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `abmproveedores`
+--
+
 DROP TABLE IF EXISTS `abmproveedores`;
-CREATE TABLE `abmproveedores` (
+CREATE TABLE IF NOT EXISTS `abmproveedores` (
   `provid` int(10) NOT NULL AUTO_INCREMENT,
   `provnombre` varchar(255) DEFAULT NULL,
   `provcuit` varchar(50) DEFAULT NULL,
@@ -45,73 +58,88 @@ CREATE TABLE `abmproveedores` (
   PRIMARY KEY (`provid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for admcustomers
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `admcustomers`
+--
+
 DROP TABLE IF EXISTS `admcustomers`;
-CREATE TABLE `admcustomers` (
+CREATE TABLE IF NOT EXISTS `admcustomers` (
   `cliId` int(11) NOT NULL AUTO_INCREMENT,
-  `cliName` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `cliLastName` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `cliDni` varchar(8) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `cliName` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `cliLastName` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `cliDni` varchar(8) CHARACTER SET utf8 DEFAULT NULL,
   `cliDateOfBirth` date DEFAULT NULL,
-  `cliNroCustomer` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `cliAddress` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `cliPhone` varchar(25) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `cliMovil` varchar(25) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `cliEmail` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `cliImagePath` varchar(100) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `cliNroCustomer` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
+  `cliAddress` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `cliPhone` varchar(25) CHARACTER SET utf8 DEFAULT NULL,
+  `cliMovil` varchar(25) CHARACTER SET utf8 DEFAULT NULL,
+  `cliEmail` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `cliImagePath` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `zonaId` int(11) DEFAULT NULL,
-  `cliDay` int(11) DEFAULT '30',
-  `cliColor` varchar(7) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `cliDay` int(11) DEFAULT 30,
+  `cliColor` varchar(7) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`cliId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for admstock
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `admstock`
+--
+
 DROP TABLE IF EXISTS `admstock`;
-CREATE TABLE `admstock` (
+CREATE TABLE IF NOT EXISTS `admstock` (
   `stkId` int(11) NOT NULL AUTO_INCREMENT,
   `prodId` int(11) NOT NULL,
   `stkCant` int(11) NOT NULL,
   `usrId` int(11) NOT NULL,
   `stkDate` datetime NOT NULL,
-  `stkMotive` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `stkMotive` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`stkId`),
   KEY `prodId` (`prodId`),
   KEY `usrId` (`usrId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for admvisits
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `admvisits`
+--
+
 DROP TABLE IF EXISTS `admvisits`;
-CREATE TABLE `admvisits` (
+CREATE TABLE IF NOT EXISTS `admvisits` (
   `vstId` int(11) NOT NULL AUTO_INCREMENT,
   `vstDate` datetime NOT NULL,
   `cliId` int(11) NOT NULL,
-  `vstNote` text COLLATE utf8_spanish_ci NOT NULL,
-  `vstStatus` varchar(2) COLLATE utf8_spanish_ci NOT NULL,
+  `vstNote` text CHARACTER SET utf8 NOT NULL,
+  `vstStatus` varchar(2) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`vstId`),
   KEY `cliId` (`cliId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for area
--- ----------------------------
-DROP TABLE IF EXISTS `area`;
-CREATE TABLE `area` (
-  `id_area` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(100) COLLATE utf8mb4_spanish_ci NOT NULL,
-  PRIMARY KEY (`id_area`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+-- --------------------------------------------------------
 
--- ----------------------------
--- Table structure for articles
--- ----------------------------
+--
+-- Estructura de tabla para la tabla `area`
+--
+
+DROP TABLE IF EXISTS `area`;
+CREATE TABLE IF NOT EXISTS `area` (
+  `id_area` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  PRIMARY KEY (`id_area`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `articles`
+--
+
 DROP TABLE IF EXISTS `articles`;
-CREATE TABLE `articles` (
+CREATE TABLE IF NOT EXISTS `articles` (
   `artId` int(11) NOT NULL AUTO_INCREMENT,
   `artBarCode` varchar(50) NOT NULL,
   `artDescription` varchar(50) NOT NULL,
@@ -129,11 +157,14 @@ CREATE TABLE `articles` (
   UNIQUE KEY `artDescription` (`artDescription`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for asignaherramientas
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asignaherramientas`
+--
+
 DROP TABLE IF EXISTS `asignaherramientas`;
-CREATE TABLE `asignaherramientas` (
+CREATE TABLE IF NOT EXISTS `asignaherramientas` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `herrId` int(11) DEFAULT NULL,
   `id_orden` int(11) DEFAULT NULL,
@@ -143,11 +174,14 @@ CREATE TABLE `asignaherramientas` (
   KEY `id_orden` (`id_orden`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for asignausuario
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asignausuario`
+--
+
 DROP TABLE IF EXISTS `asignausuario`;
-CREATE TABLE `asignausuario` (
+CREATE TABLE IF NOT EXISTS `asignausuario` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `usrId` int(11) DEFAULT NULL,
   `id_orden` int(11) DEFAULT NULL,
@@ -157,28 +191,82 @@ CREATE TABLE `asignausuario` (
   KEY `id_orden` (`id_orden`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for clientes
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ciudades`
+--
+
+DROP TABLE IF EXISTS `ciudades`;
+CREATE TABLE IF NOT EXISTS `ciudades` (
+  `idCiudades` int(11) NOT NULL AUTO_INCREMENT,
+  `Paises_Codigo` varchar(2) NOT NULL,
+  `Ciudad` varchar(100) NOT NULL,
+  PRIMARY KEY (`idCiudades`),
+  KEY `Paises_Codigo` (`Paises_Codigo`),
+  KEY `Ciudad` (`Ciudad`)
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `ciudades`
+--
+
+INSERT INTO `ciudades` (`idCiudades`, `Paises_Codigo`, `Ciudad`) VALUES
+  (1, 'AR', 'Buenos Aires'),
+  (2, 'AR', 'Santa Fe'),
+  (3, 'AR', 'Córdoba'),
+  (4, 'AR', 'Misiones'),
+  (5, 'AR', 'Entre Rios'),
+  (6, 'AR', 'Mendoza'),
+  (7, 'AR', 'San Juan'),
+  (8, 'AR', 'Tucumán'),
+  (9, 'AR', 'Tierra del Fuego'),
+  (10, 'AR', 'Chaco'),
+  (11, 'AR', 'La Pampa'),
+  (12, 'AR', 'Jujuy'),
+  (13, 'AR', 'Rio Negro'),
+  (14, 'AR', 'Chubut'),
+  (15, 'AR', 'Corrientes'),
+  (16, 'AR', 'Santa Cruz'),
+  (17, 'AR', 'Salta'),
+  (18, 'AR', 'San Luis'),
+  (19, 'AR', 'Neuquen'),
+  (20, 'AR', 'Catamarca'),
+  (21, 'AR', 'Santiago del Estero'),
+  (22, 'AR', 'La Rioja'),
+  (23, 'AR', 'Formosa');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `clientes`
+--
+
 DROP TABLE IF EXISTS `clientes`;
-CREATE TABLE `clientes` (
-  `clinteid` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `clientes` (
+  `clinteid` int(11) NOT NULL AUTO_INCREMENT,
   `clientrazonsocial` varchar(255) DEFAULT NULL,
   `clientdireccion` varchar(255) DEFAULT NULL,
   `clientmail` varchar(255) DEFAULT NULL,
   `clienttelefono` int(11) DEFAULT NULL,
   `clientetelefono1` varchar(255) DEFAULT NULL,
-  `localidadid` int(11) DEFAULT NULL,
-  `paisid` int(11) DEFAULT NULL,
+  `localidadid` varchar(50) DEFAULT NULL,
+  `paisid` varchar(2) DEFAULT NULL,
   `provinciaid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`clinteid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `cuenta_cuentaid` int(11) NOT NULL,
+  PRIMARY KEY (`clinteid`),
+  KEY `fk_clientes_cuenta1_idx` (`cuenta_cuentaid`)
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for componenteequipo
--- ----------------------------
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `componenteequipo`
+--
+
 DROP TABLE IF EXISTS `componenteequipo`;
-CREATE TABLE `componenteequipo` (
+CREATE TABLE IF NOT EXISTS `componenteequipo` (
   `idcomponenteequipo` int(11) NOT NULL AUTO_INCREMENT,
   `id_equipo` int(11) DEFAULT NULL,
   `id_componente` int(11) DEFAULT NULL,
@@ -188,113 +276,147 @@ CREATE TABLE `componenteequipo` (
   PRIMARY KEY (`idcomponenteequipo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for componentes
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `componentes`
+--
+
 DROP TABLE IF EXISTS `componentes`;
-CREATE TABLE `componentes` (
+CREATE TABLE IF NOT EXISTS `componentes` (
   `id_componente` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(255) CHARACTER SET latin1 NOT NULL,
   `id_equipo` int(11) DEFAULT NULL,
   `fechahora` datetime DEFAULT NULL,
-  `informacion` text COLLATE utf8_spanish_ci,
+  `informacion` text CHARACTER SET utf8 DEFAULT NULL,
   `marcaid` int(11) DEFAULT NULL,
-  `pdf` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `pdf` varchar(255) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id_componente`),
   KEY `id_equipo` (`id_equipo`),
   KEY `marcaid` (`marcaid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for conffamily
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `conffamily`
+--
+
 DROP TABLE IF EXISTS `conffamily`;
-CREATE TABLE `conffamily` (
+CREATE TABLE IF NOT EXISTS `conffamily` (
   `famId` int(11) NOT NULL AUTO_INCREMENT,
-  `famName` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `famName` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`famId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for confsubfamily
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `confsubfamily`
+--
+
 DROP TABLE IF EXISTS `confsubfamily`;
-CREATE TABLE `confsubfamily` (
+CREATE TABLE IF NOT EXISTS `confsubfamily` (
   `sfamId` int(11) NOT NULL AUTO_INCREMENT,
-  `sfamName` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `sfamName` varchar(50) CHARACTER SET utf8 NOT NULL,
   `famId` int(11) DEFAULT NULL,
   PRIMARY KEY (`sfamId`),
   KEY `famId` (`famId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for confzone
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `confzone`
+--
+
 DROP TABLE IF EXISTS `confzone`;
-CREATE TABLE `confzone` (
+CREATE TABLE IF NOT EXISTS `confzone` (
   `zonaId` int(11) NOT NULL AUTO_INCREMENT,
-  `zonaName` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `zonaName` varchar(50) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`zonaId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for contratistaquipo
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `contratistaquipo`
+--
+
 DROP TABLE IF EXISTS `contratistaquipo`;
-CREATE TABLE `contratistaquipo` (
+CREATE TABLE IF NOT EXISTS `contratistaquipo` (
   `id_equipo` int(1) NOT NULL,
   `id_contratista` int(11) NOT NULL,
   PRIMARY KEY (`id_contratista`,`id_equipo`),
   KEY `id_equipo` (`id_equipo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for contratistas
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `contratistas`
+--
+
 DROP TABLE IF EXISTS `contratistas`;
-CREATE TABLE `contratistas` (
+CREATE TABLE IF NOT EXISTS `contratistas` (
   `id_contratista` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `contradireccion` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
-  `contramail` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `contramail1` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `contracelular1` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `contracelular2` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `contratelefono` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
-  `contracontacto` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
-  `estado` char(4) COLLATE utf8_spanish_ci NOT NULL,
+  `contradireccion` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `contramail` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `contramail1` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `contracelular1` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `contracelular2` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `contratelefono` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `contracontacto` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `estado` char(4) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id_contratista`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for criticidad
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `criticidad`
+--
+
 DROP TABLE IF EXISTS `criticidad`;
-CREATE TABLE `criticidad` (
+CREATE TABLE IF NOT EXISTS `criticidad` (
   `id_criti` int(10) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(50) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id_criti`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for cuenta
--- ----------------------------
-DROP TABLE IF EXISTS `cuenta`;
-CREATE TABLE `cuenta` (
-  `cuentaid` int(11) NOT NULL,
-  `cuentafecha` varchar(255) DEFAULT NULL,
-  `clientid` int(11) DEFAULT NULL,
-  `tipocuentaid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`cuentaid`),
-  KEY `tipocuentaid` (`tipocuentaid`),
-  CONSTRAINT `cuenta_ibfk_1` FOREIGN KEY (`tipocuentaid`) REFERENCES `tipocuenta` (`tipocuentaid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+-- --------------------------------------------------------
 
--- ----------------------------
--- Table structure for deta-remito
--- ----------------------------
+--
+-- Estructura de tabla para la tabla `cuenta`
+--
+
+DROP TABLE IF EXISTS `cuenta`;
+CREATE TABLE IF NOT EXISTS `cuenta` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cuentadescrip` varchar(255) DEFAULT NULL,
+  `tipocuentaid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tipocuentaid` (`tipocuentaid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `cuenta`
+--
+
+INSERT INTO `cuenta` (`id`, `cuentadescrip`, `tipocuentaid`) VALUES
+  (1, 'Free', 1),
+  (2, 'Pro', 2),
+  (3, 'Platinum', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `deta-remito`
+--
+
 DROP TABLE IF EXISTS `deta-remito`;
-CREATE TABLE `deta-remito` (
+CREATE TABLE IF NOT EXISTS `deta-remito` (
   `detaremitoid` int(11) NOT NULL AUTO_INCREMENT,
   `id_remito` int(11) NOT NULL,
   `loteid` int(11) NOT NULL,
@@ -303,11 +425,14 @@ CREATE TABLE `deta-remito` (
   PRIMARY KEY (`detaremitoid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for deta_ordeninsumos
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `deta_ordeninsumos`
+--
+
 DROP TABLE IF EXISTS `deta_ordeninsumos`;
-CREATE TABLE `deta_ordeninsumos` (
+CREATE TABLE IF NOT EXISTS `deta_ordeninsumos` (
   `id_detaordeninsumo` int(11) NOT NULL AUTO_INCREMENT,
   `id_ordeninsumo` int(11) DEFAULT NULL,
   `loteid` int(10) NOT NULL,
@@ -318,16 +443,19 @@ CREATE TABLE `deta_ordeninsumos` (
   KEY `id_ordeninsumo` (`id_ordeninsumo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for deta_ordenservicio
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `deta_ordenservicio`
+--
+
 DROP TABLE IF EXISTS `deta_ordenservicio`;
-CREATE TABLE `deta_ordenservicio` (
+CREATE TABLE IF NOT EXISTS `deta_ordenservicio` (
   `id_detasercicio` int(11) NOT NULL AUTO_INCREMENT,
   `id_ordenservicio` int(11) NOT NULL,
   `id_tarea` int(11) NOT NULL,
   `tiempo` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `observacion` text CHARACTER SET latin1,
+  `observacion` text CHARACTER SET latin1 DEFAULT NULL,
   `monto` double NOT NULL,
   `id_componente` int(11) NOT NULL,
   `rh` int(11) DEFAULT NULL,
@@ -337,47 +465,56 @@ CREATE TABLE `deta_ordenservicio` (
   KEY `deta_ordenservicio_ibfk_2` (`id_tarea`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for empresas
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `empresas`
+--
+
 DROP TABLE IF EXISTS `empresas`;
-CREATE TABLE `empresas` (
+CREATE TABLE IF NOT EXISTS `empresas` (
   `id_empresa` int(50) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `empcuit` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
-  `empdir` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
-  `emptelefono` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
-  `empemail` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
-  `cliImagePath` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
-  `localidadid` int(11) DEFAULT NULL,
+  `empcuit` varchar(255) DEFAULT NULL,
+  `empdir` varchar(255) DEFAULT NULL,
+  `emptelefono` varchar(255) DEFAULT NULL,
+  `empemail` varchar(255) DEFAULT NULL,
+  `cliImagePath` varchar(255) DEFAULT NULL,
+  `localidadid` varchar(50) DEFAULT NULL,
   `provinciaid` int(11) DEFAULT NULL,
-  `paisid` int(11) DEFAULT NULL,
-  `gps` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
-  `empcelular` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `paisid` varchar(2) DEFAULT NULL,
+  `gps` varchar(255) DEFAULT NULL,
+  `empcelular` varchar(255) DEFAULT NULL,
   `zonaId` int(11) DEFAULT NULL,
-  `emlogo` blob,
-  `clienteid` int(11) DEFAULT NULL,
+  `emlogo` varchar(255) DEFAULT NULL,
+  `clienteid` int(11) NOT NULL,
   PRIMARY KEY (`id_empresa`),
-  KEY `clienteid` (`clienteid`),
-  CONSTRAINT `empresas_ibfk_1` FOREIGN KEY (`clienteid`) REFERENCES `clientes` (`clinteid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+  KEY `clienteid` (`clienteid`)
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for envios
--- ----------------------------
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `envios`
+--
+
 DROP TABLE IF EXISTS `envios`;
-CREATE TABLE `envios` (
+CREATE TABLE IF NOT EXISTS `envios` (
   `id_envio` int(10) NOT NULL AUTO_INCREMENT,
   `fecha` date NOT NULL,
   `ultimo_envio` varchar(10) NOT NULL,
   PRIMARY KEY (`id_envio`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for equipos
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `equipos`
+--
+
 DROP TABLE IF EXISTS `equipos`;
-CREATE TABLE `equipos` (
+CREATE TABLE IF NOT EXISTS `equipos` (
   `id_equipo` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(255) CHARACTER SET latin1 NOT NULL,
   `fecha_ingreso` date NOT NULL,
@@ -401,7 +538,7 @@ CREATE TABLE `equipos` (
   `id_proveedor` double NOT NULL,
   `valor` double NOT NULL,
   `comprobante` varchar(255) CHARACTER SET latin1 NOT NULL,
-  `descrip_tecnica` text COLLATE utf8_spanish_ci NOT NULL,
+  `descrip_tecnica` text CHARACTER SET utf8 NOT NULL,
   `id_unidad` int(11) NOT NULL,
   `id_area` int(11) DEFAULT NULL,
   `id_proceso` int(11) DEFAULT NULL,
@@ -410,55 +547,66 @@ CREATE TABLE `equipos` (
   KEY `id_empresa` (`id_empresa`),
   KEY `id_sector` (`id_sector`),
   KEY `id_criticidad` (`id_criticidad`),
-  KEY `id_grupo` (`id_grupo`),
-  CONSTRAINT `equipos_ibfk_1` FOREIGN KEY (`id_empresa`) REFERENCES `empresas` (`id_empresa`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `id_grupo` (`id_grupo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for fallas
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `fallas`
+--
+
 DROP TABLE IF EXISTS `fallas`;
-CREATE TABLE `fallas` (
+CREATE TABLE IF NOT EXISTS `fallas` (
   `id_reparacion` int(100) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(255) NOT NULL,
   PRIMARY KEY (`id_reparacion`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for ficha_equipo
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ficha_equipo`
+--
+
 DROP TABLE IF EXISTS `ficha_equipo`;
-CREATE TABLE `ficha_equipo` (
+CREATE TABLE IF NOT EXISTS `ficha_equipo` (
   `id_fichaequip` int(11) NOT NULL AUTO_INCREMENT,
   `id_equipo` int(11) NOT NULL,
-  `marca` varchar(3000) COLLATE utf8_spanish_ci NOT NULL,
-  `modelo` varchar(3000) COLLATE utf8_spanish_ci NOT NULL,
-  `numero_motor` varchar(3000) COLLATE utf8_spanish_ci NOT NULL,
-  `numero_serie` varchar(3000) COLLATE utf8_spanish_ci NOT NULL,
+  `marca` varchar(3000) CHARACTER SET utf8 NOT NULL,
+  `modelo` varchar(3000) CHARACTER SET utf8 NOT NULL,
+  `numero_motor` varchar(3000) CHARACTER SET utf8 NOT NULL,
+  `numero_serie` varchar(3000) CHARACTER SET utf8 NOT NULL,
   `fecha_ingreso` date NOT NULL,
-  `dominio` varchar(3000) COLLATE utf8_spanish_ci NOT NULL,
+  `dominio` varchar(3000) CHARACTER SET utf8 NOT NULL,
   `fabricacion` int(11) NOT NULL,
   `peso` float NOT NULL,
-  `bateria` varchar(3000) COLLATE utf8_spanish_ci NOT NULL,
+  `bateria` varchar(3000) CHARACTER SET utf8 NOT NULL,
   `hora_lectura` float NOT NULL,
   PRIMARY KEY (`id_fichaequip`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for grupo
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `grupo`
+--
+
 DROP TABLE IF EXISTS `grupo`;
-CREATE TABLE `grupo` (
+CREATE TABLE IF NOT EXISTS `grupo` (
   `id_grupo` int(10) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(50) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id_grupo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for herramientas
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `herramientas`
+--
+
 DROP TABLE IF EXISTS `herramientas`;
-CREATE TABLE `herramientas` (
+CREATE TABLE IF NOT EXISTS `herramientas` (
   `herrId` int(11) NOT NULL AUTO_INCREMENT,
   `herrcodigo` varchar(255) NOT NULL DEFAULT '',
   `herrmarca` varchar(255) DEFAULT NULL,
@@ -472,28 +620,34 @@ CREATE TABLE `herramientas` (
   KEY `depositoId` (`depositoId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for historial_lecturas
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `historial_lecturas`
+--
+
 DROP TABLE IF EXISTS `historial_lecturas`;
-CREATE TABLE `historial_lecturas` (
+CREATE TABLE IF NOT EXISTS `historial_lecturas` (
   `id_lectura` int(10) NOT NULL AUTO_INCREMENT,
   `id_equipo` int(10) NOT NULL,
   `lectura` int(10) NOT NULL,
   `fecha` datetime NOT NULL,
   `usrId` int(11) NOT NULL,
-  `observacion` text,
-  `operario_nom` varchar(50) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `turno` varchar(11) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `observacion` text DEFAULT NULL,
+  `operario_nom` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `turno` varchar(11) CHARACTER SET utf8 NOT NULL,
   `estado` varchar(4) NOT NULL,
   PRIMARY KEY (`id_lectura`)
 ) ENGINE=MyISAM AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for infocomponentes
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `infocomponentes`
+--
+
 DROP TABLE IF EXISTS `infocomponentes`;
-CREATE TABLE `infocomponentes` (
+CREATE TABLE IF NOT EXISTS `infocomponentes` (
   `infocompid` int(11) NOT NULL AUTO_INCREMENT,
   `infocompdescrip` varchar(255) DEFAULT NULL,
   `archivo` varchar(255) DEFAULT NULL,
@@ -503,11 +657,14 @@ CREATE TABLE `infocomponentes` (
   KEY `id_equipo` (`id_equipo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for infoequipos
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `infoequipos`
+--
+
 DROP TABLE IF EXISTS `infoequipos`;
-CREATE TABLE `infoequipos` (
+CREATE TABLE IF NOT EXISTS `infoequipos` (
   `infoid` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(255) DEFAULT NULL,
   `archivo` varchar(255) DEFAULT NULL,
@@ -516,57 +673,72 @@ CREATE TABLE `infoequipos` (
   KEY `id_equipo` (`id_equipo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for informacionequipo
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `informacionequipo`
+--
+
 DROP TABLE IF EXISTS `informacionequipo`;
-CREATE TABLE `informacionequipo` (
+CREATE TABLE IF NOT EXISTS `informacionequipo` (
   `id_informacion` int(11) NOT NULL AUTO_INCREMENT,
-  `titulo` varchar(50) COLLATE utf8mb4_spanish_ci NOT NULL,
-  `descripcion` varchar(100) COLLATE utf8mb4_spanish_ci NOT NULL,
+  `titulo` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  `descripcion` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
   `id_equipo` int(11) NOT NULL,
   PRIMARY KEY (`id_informacion`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for marcasequipos
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `marcasequipos`
+--
+
 DROP TABLE IF EXISTS `marcasequipos`;
-CREATE TABLE `marcasequipos` (
+CREATE TABLE IF NOT EXISTS `marcasequipos` (
   `marcaid` int(11) NOT NULL AUTO_INCREMENT,
   `marcadescrip` varchar(255) DEFAULT NULL,
   `estado` varchar(3) NOT NULL,
   PRIMARY KEY (`marcaid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for modelo_año
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `modelo_año`
+--
+
 DROP TABLE IF EXISTS `modelo_año`;
-CREATE TABLE `modelo_año` (
+CREATE TABLE IF NOT EXISTS `modelo_año` (
   `id_año` int(100) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(10) NOT NULL,
   PRIMARY KEY (`id_año`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for orden_insumos
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `orden_insumos`
+--
+
 DROP TABLE IF EXISTS `orden_insumos`;
-CREATE TABLE `orden_insumos` (
+CREATE TABLE IF NOT EXISTS `orden_insumos` (
   `id_orden` int(11) NOT NULL AUTO_INCREMENT,
   `fecha` date DEFAULT NULL,
-  `solicitante` varchar(100) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `destino` varchar(100) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `solicitante` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `destino` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `comprobante` int(255) DEFAULT NULL,
   PRIMARY KEY (`id_orden`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for orden_pedido
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `orden_pedido`
+--
+
 DROP TABLE IF EXISTS `orden_pedido`;
-CREATE TABLE `orden_pedido` (
+CREATE TABLE IF NOT EXISTS `orden_pedido` (
   `id_orden` int(11) NOT NULL AUTO_INCREMENT,
   `id_proveedor` int(11) NOT NULL,
   `nro_trabajo` int(11) NOT NULL,
@@ -583,11 +755,14 @@ CREATE TABLE `orden_pedido` (
   KEY `id_proveedor` (`id_proveedor`)
 ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for orden_servicio
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `orden_servicio`
+--
+
 DROP TABLE IF EXISTS `orden_servicio`;
-CREATE TABLE `orden_servicio` (
+CREATE TABLE IF NOT EXISTS `orden_servicio` (
   `id_orden` int(11) NOT NULL AUTO_INCREMENT,
   `fecha` date NOT NULL,
   `comprobante` varchar(255) CHARACTER SET latin1 NOT NULL,
@@ -595,7 +770,7 @@ CREATE TABLE `orden_servicio` (
   `id_contratista` int(11) NOT NULL,
   `id_solicitudreparacion` int(11) NOT NULL,
   `valesid` int(11) DEFAULT NULL,
-  `estado` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `estado` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `id_ordenherraminetas` int(11) DEFAULT NULL,
   `id_orden_insumo` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_orden`),
@@ -605,11 +780,14 @@ CREATE TABLE `orden_servicio` (
   KEY `id_orden_insumo` (`id_orden_insumo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for orden_trabajo
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `orden_trabajo`
+--
+
 DROP TABLE IF EXISTS `orden_trabajo`;
-CREATE TABLE `orden_trabajo` (
+CREATE TABLE IF NOT EXISTS `orden_trabajo` (
   `id_orden` int(11) NOT NULL AUTO_INCREMENT,
   `id_tarea` int(11) DEFAULT NULL,
   `nro` varchar(100) NOT NULL,
@@ -621,12 +799,12 @@ CREATE TABLE `orden_trabajo` (
   `fecha_aviso` datetime NOT NULL,
   `fecha_entregada` datetime NOT NULL,
   `descripcion` text NOT NULL,
-  `cliId` int(11) NOT NULL DEFAULT '1',
+  `cliId` int(11) NOT NULL DEFAULT 1,
   `estado` varchar(2) NOT NULL,
-  `id_usuario` int(11) NOT NULL DEFAULT '1',
+  `id_usuario` int(11) NOT NULL DEFAULT 1,
   `id_usuario_a` int(11) NOT NULL,
   `id_usuario_e` int(11) NOT NULL,
-  `id_sucursal` int(11) NOT NULL DEFAULT '1',
+  `id_sucursal` int(11) NOT NULL DEFAULT 1,
   `id_proveedor` int(11) NOT NULL,
   `id_solicitud` int(11) NOT NULL,
   `tipo` varchar(2) NOT NULL,
@@ -641,11 +819,34 @@ CREATE TABLE `orden_trabajo` (
   KEY `id_sucursal` (`id_sucursal`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=528 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for parametroequipo
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `paises`
+--
+
+DROP TABLE IF EXISTS `paises`;
+CREATE TABLE IF NOT EXISTS `paises` (
+  `Codigo` varchar(2) NOT NULL,
+  `Pais` varchar(100) NOT NULL,
+  PRIMARY KEY (`Codigo`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `paises`
+--
+
+INSERT INTO `paises` (`Codigo`, `Pais`) VALUES
+  ('AR', 'Argentina');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `parametroequipo`
+--
+
 DROP TABLE IF EXISTS `parametroequipo`;
-CREATE TABLE `parametroequipo` (
+CREATE TABLE IF NOT EXISTS `parametroequipo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `paramId` int(11) NOT NULL,
   `id_equipo` int(11) NOT NULL,
@@ -656,40 +857,49 @@ CREATE TABLE `parametroequipo` (
   KEY `paramId` (`paramId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for parametros
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `parametros`
+--
+
 DROP TABLE IF EXISTS `parametros`;
-CREATE TABLE `parametros` (
+CREATE TABLE IF NOT EXISTS `parametros` (
   `paramId` int(11) NOT NULL AUTO_INCREMENT,
   `paramdescrip` varchar(255) DEFAULT NULL,
   `min` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`paramId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for predictivo
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `predictivo`
+--
+
 DROP TABLE IF EXISTS `predictivo`;
-CREATE TABLE `predictivo` (
+CREATE TABLE IF NOT EXISTS `predictivo` (
   `predId` int(11) NOT NULL AUTO_INCREMENT,
   `id_equipo` int(11) NOT NULL,
-  `tarea_descrip` varchar(2000) COLLATE utf8_spanish_ci NOT NULL,
+  `tarea_descrip` varchar(2000) CHARACTER SET utf8 NOT NULL,
   `fecha` date NOT NULL,
-  `periodo` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `periodo` varchar(50) CHARACTER SET utf8 NOT NULL,
   `cantidad` int(11) NOT NULL,
   `horash` int(11) DEFAULT NULL,
-  `estado` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `estado` varchar(5) CHARACTER SET utf8 NOT NULL,
   `pred_duracion` int(11) NOT NULL,
   `pred_canth` int(11) NOT NULL,
   PRIMARY KEY (`predId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for preventivo
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `preventivo`
+--
+
 DROP TABLE IF EXISTS `preventivo`;
-CREATE TABLE `preventivo` (
+CREATE TABLE IF NOT EXISTS `preventivo` (
   `prevId` int(11) NOT NULL AUTO_INCREMENT,
   `id_equipo` int(11) NOT NULL,
   `id_tarea` int(11) NOT NULL,
@@ -709,21 +919,27 @@ CREATE TABLE `preventivo` (
   KEY `id_componente` (`id_componente`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for proceso
--- ----------------------------
-DROP TABLE IF EXISTS `proceso`;
-CREATE TABLE `proceso` (
-  `id_proceso` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(100) COLLATE utf8mb4_spanish_ci NOT NULL,
-  PRIMARY KEY (`id_proceso`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+-- --------------------------------------------------------
 
--- ----------------------------
--- Table structure for remitos
--- ----------------------------
+--
+-- Estructura de tabla para la tabla `proceso`
+--
+
+DROP TABLE IF EXISTS `proceso`;
+CREATE TABLE IF NOT EXISTS `proceso` (
+  `id_proceso` int(11) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
+  PRIMARY KEY (`id_proceso`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `remitos`
+--
+
 DROP TABLE IF EXISTS `remitos`;
-CREATE TABLE `remitos` (
+CREATE TABLE IF NOT EXISTS `remitos` (
   `remitoId` int(11) NOT NULL AUTO_INCREMENT,
   `fecha` datetime NOT NULL,
   `provid` int(11) NOT NULL,
@@ -732,47 +948,59 @@ CREATE TABLE `remitos` (
   KEY `provid` (`provid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for rubro
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `rubro`
+--
+
 DROP TABLE IF EXISTS `rubro`;
-CREATE TABLE `rubro` (
+CREATE TABLE IF NOT EXISTS `rubro` (
   `id_rubro` int(10) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(50) NOT NULL,
   PRIMARY KEY (`id_rubro`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for sector
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sector`
+--
+
 DROP TABLE IF EXISTS `sector`;
-CREATE TABLE `sector` (
+CREATE TABLE IF NOT EXISTS `sector` (
   `id_sector` int(10) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(50) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id_sector`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for seguro
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `seguro`
+--
+
 DROP TABLE IF EXISTS `seguro`;
-CREATE TABLE `seguro` (
+CREATE TABLE IF NOT EXISTS `seguro` (
   `id_seguro` int(11) NOT NULL AUTO_INCREMENT,
-  `asegurado` varchar(3000) COLLATE utf8_spanish_ci NOT NULL,
+  `asegurado` varchar(3000) CHARACTER SET utf8 NOT NULL,
   `ref` int(11) NOT NULL,
   `numero_pliza` int(11) NOT NULL,
   `fecha_inicio` datetime NOT NULL,
   `fecha_vigencia` datetime NOT NULL,
-  `cobertura` varchar(3000) COLLATE utf8_spanish_ci NOT NULL,
+  `cobertura` varchar(3000) CHARACTER SET utf8 NOT NULL,
   `id_equipo` int(11) NOT NULL,
   PRIMARY KEY (`id_seguro`)
 ) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for setupparam
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `setupparam`
+--
+
 DROP TABLE IF EXISTS `setupparam`;
-CREATE TABLE `setupparam` (
+CREATE TABLE IF NOT EXISTS `setupparam` (
   `id_equipo` int(11) NOT NULL,
   `id_parametro` int(11) NOT NULL,
   `maximo` double NOT NULL,
@@ -781,33 +1009,42 @@ CREATE TABLE `setupparam` (
   KEY `id_equipo` (`id_equipo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for sisactions
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sisactions`
+--
+
 DROP TABLE IF EXISTS `sisactions`;
-CREATE TABLE `sisactions` (
+CREATE TABLE IF NOT EXISTS `sisactions` (
   `actId` int(11) NOT NULL AUTO_INCREMENT,
-  `actDescription` varchar(20) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `actDescriptionSpanish` varchar(20) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `actDescription` varchar(20) NOT NULL,
+  `actDescriptionSpanish` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`actId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for sisgroups
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sisgroups`
+--
+
 DROP TABLE IF EXISTS `sisgroups`;
-CREATE TABLE `sisgroups` (
+CREATE TABLE IF NOT EXISTS `sisgroups` (
   `grpId` int(11) NOT NULL AUTO_INCREMENT,
-  `grpName` varchar(20) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `grpDash` varchar(50) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `grpName` varchar(20) NOT NULL,
+  `grpDash` varchar(50) NOT NULL,
   PRIMARY KEY (`grpId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for sisgroupsactions
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sisgroupsactions`
+--
+
 DROP TABLE IF EXISTS `sisgroupsactions`;
-CREATE TABLE `sisgroupsactions` (
+CREATE TABLE IF NOT EXISTS `sisgroupsactions` (
   `grpactId` int(11) NOT NULL AUTO_INCREMENT,
   `grpId` int(11) NOT NULL,
   `menuAccId` int(11) NOT NULL,
@@ -816,11 +1053,14 @@ CREATE TABLE `sisgroupsactions` (
   KEY `menuAccId` (`menuAccId`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=568 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for sismenu
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sismenu`
+--
+
 DROP TABLE IF EXISTS `sismenu`;
-CREATE TABLE `sismenu` (
+CREATE TABLE IF NOT EXISTS `sismenu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent` int(11) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
@@ -831,43 +1071,52 @@ CREATE TABLE `sismenu` (
   KEY `parent` (`parent`)
 ) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for sismenuactions
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sismenuactions`
+--
+
 DROP TABLE IF EXISTS `sismenuactions`;
-CREATE TABLE `sismenuactions` (
+CREATE TABLE IF NOT EXISTS `sismenuactions` (
   `menuAccId` int(11) NOT NULL AUTO_INCREMENT,
   `menuId` int(11) NOT NULL,
   `actId` int(11) DEFAULT NULL,
   PRIMARY KEY (`menuAccId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for sisusers
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sisusers`
+--
+
 DROP TABLE IF EXISTS `sisusers`;
-CREATE TABLE `sisusers` (
+CREATE TABLE IF NOT EXISTS `sisusers` (
   `usrId` int(11) NOT NULL AUTO_INCREMENT,
-  `usrNick` varchar(10) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `usrName` varchar(50) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `usrLastName` varchar(50) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `usrNick` varchar(100) NOT NULL,
+  `usrName` varchar(50) NOT NULL,
+  `usrLastName` varchar(50) NOT NULL,
   `usrComision` int(11) NOT NULL,
-  `usrPassword` varchar(5000) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `usrPassword` varchar(5000) NOT NULL,
   `grpId` int(11) NOT NULL,
   `usrimag` blob NOT NULL,
   PRIMARY KEY (`usrId`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for solicitud_reparacion
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `solicitud_reparacion`
+--
+
 DROP TABLE IF EXISTS `solicitud_reparacion`;
-CREATE TABLE `solicitud_reparacion` (
+CREATE TABLE IF NOT EXISTS `solicitud_reparacion` (
   `id_solicitud` int(100) NOT NULL AUTO_INCREMENT,
   `numero` int(100) DEFAULT NULL,
   `id_tipo` int(10) DEFAULT NULL,
   `nivel` int(10) DEFAULT NULL,
-  `solicitante` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `solicitante` varchar(255) CHARACTER SET utf8 NOT NULL,
   `f_solicitado` datetime NOT NULL,
   `f_sugerido` date NOT NULL,
   `hora_sug` time NOT NULL,
@@ -878,20 +1127,23 @@ CREATE TABLE `solicitud_reparacion` (
   `estado` varchar(2) CHARACTER SET latin1 NOT NULL,
   `usrId` int(11) NOT NULL,
   `fecha_conformidad` date NOT NULL,
-  `observ_conformidad` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
-  `foto1` blob,
-  `foto2` blob,
-  `foto3` blob,
-  `foto` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `observ_conformidad` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `foto1` blob DEFAULT NULL,
+  `foto2` blob DEFAULT NULL,
+  `foto3` blob DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`id_solicitud`),
   KEY `id_equipo` (`id_equipo`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for sucursal
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sucursal`
+--
+
 DROP TABLE IF EXISTS `sucursal`;
-CREATE TABLE `sucursal` (
+CREATE TABLE IF NOT EXISTS `sucursal` (
   `id_sucursal` int(11) NOT NULL AUTO_INCREMENT,
   `dire` varchar(3000) NOT NULL,
   `telefono` varchar(3000) NOT NULL,
@@ -901,37 +1153,46 @@ CREATE TABLE `sucursal` (
   PRIMARY KEY (`id_sucursal`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for tareas
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tareas`
+--
+
 DROP TABLE IF EXISTS `tareas`;
-CREATE TABLE `tareas` (
+CREATE TABLE IF NOT EXISTS `tareas` (
   `id_tarea` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(255) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id_tarea`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for tbl_back
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_back`
+--
+
 DROP TABLE IF EXISTS `tbl_back`;
-CREATE TABLE `tbl_back` (
+CREATE TABLE IF NOT EXISTS `tbl_back` (
   `backId` int(11) NOT NULL AUTO_INCREMENT,
   `id_equipo` int(11) NOT NULL,
-  `tarea_descrip` varchar(500) COLLATE utf8_spanish_ci NOT NULL,
+  `tarea_descrip` varchar(500) CHARACTER SET utf8 NOT NULL,
   `fecha` date NOT NULL,
   `horash` int(11) DEFAULT NULL,
-  `estado` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `estado` varchar(5) CHARACTER SET utf8 NOT NULL,
   `back_duracion` int(11) NOT NULL,
   `back_canth` int(11) NOT NULL,
   PRIMARY KEY (`backId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for tbl_detanotapedido
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_detanotapedido`
+--
+
 DROP TABLE IF EXISTS `tbl_detanotapedido`;
-CREATE TABLE `tbl_detanotapedido` (
+CREATE TABLE IF NOT EXISTS `tbl_detanotapedido` (
   `id_detaNota` int(11) NOT NULL AUTO_INCREMENT,
   `id_notaPedido` int(11) DEFAULT NULL,
   `artId` int(11) DEFAULT NULL,
@@ -940,17 +1201,19 @@ CREATE TABLE `tbl_detanotapedido` (
   `fechaEntrega` date DEFAULT NULL,
   `fechaEntregado` date DEFAULT NULL,
   `remito` int(11) DEFAULT NULL,
-  `estado` varchar(4) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `estado` varchar(4) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`id_detaNota`),
-  KEY `id_notaPedido` (`id_notaPedido`),
-  CONSTRAINT `tbl_detanotapedido_ibfk_1` FOREIGN KEY (`id_notaPedido`) REFERENCES `tbl_notapedido` (`id_notaPedido`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `id_notaPedido` (`id_notaPedido`)
 ) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for tbl_detavaledescarga
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_detavaledescarga`
+--
+
 DROP TABLE IF EXISTS `tbl_detavaledescarga`;
-CREATE TABLE `tbl_detavaledescarga` (
+CREATE TABLE IF NOT EXISTS `tbl_detavaledescarga` (
   `detavaledid` int(11) NOT NULL AUTO_INCREMENT,
   `valedid` int(11) DEFAULT NULL,
   `herrId` int(11) DEFAULT NULL,
@@ -961,63 +1224,78 @@ CREATE TABLE `tbl_detavaledescarga` (
   KEY `valedid` (`valedid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for tbl_detavalesalida
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_detavalesalida`
+--
+
 DROP TABLE IF EXISTS `tbl_detavalesalida`;
-CREATE TABLE `tbl_detavalesalida` (
+CREATE TABLE IF NOT EXISTS `tbl_detavalesalida` (
   `detavid` int(10) NOT NULL AUTO_INCREMENT,
   `valesid` int(11) DEFAULT NULL,
   `herrId` int(10) DEFAULT NULL,
-  `observa` text,
+  `observa` text DEFAULT NULL,
   `dest` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`detavid`),
   KEY `equiid` (`herrId`) USING BTREE,
   KEY `valesid` (`valesid`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for tbl_estado
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_estado`
+--
+
 DROP TABLE IF EXISTS `tbl_estado`;
-CREATE TABLE `tbl_estado` (
+CREATE TABLE IF NOT EXISTS `tbl_estado` (
   `estadoid` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(3000) COLLATE utf8_spanish_ci NOT NULL,
-  `estado` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `descripcion` varchar(3000) CHARACTER SET utf8 NOT NULL,
+  `estado` varchar(5) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`estadoid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for tbl_estanteria
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_estanteria`
+--
+
 DROP TABLE IF EXISTS `tbl_estanteria`;
-CREATE TABLE `tbl_estanteria` (
+CREATE TABLE IF NOT EXISTS `tbl_estanteria` (
   `id_estanteria` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `fila` varchar(20) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `codigo` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `descripcion` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `fila` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `codigo` varchar(255) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id_estanteria`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for tbl_listarea
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_listarea`
+--
+
 DROP TABLE IF EXISTS `tbl_listarea`;
-CREATE TABLE `tbl_listarea` (
+CREATE TABLE IF NOT EXISTS `tbl_listarea` (
   `id_listarea` int(11) NOT NULL AUTO_INCREMENT,
   `id_orden` int(11) NOT NULL,
-  `tareadescrip` varchar(5000) COLLATE utf8_spanish_ci NOT NULL,
+  `tareadescrip` varchar(5000) CHARACTER SET utf8 NOT NULL,
   `id_usuario` int(11) DEFAULT NULL,
   `fecha` date DEFAULT NULL,
-  `estado` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `estado` varchar(5) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id_listarea`)
 ) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for tbl_lote
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_lote`
+--
+
 DROP TABLE IF EXISTS `tbl_lote`;
-CREATE TABLE `tbl_lote` (
+CREATE TABLE IF NOT EXISTS `tbl_lote` (
   `loteid` int(11) NOT NULL AUTO_INCREMENT,
   `codigo` varchar(255) DEFAULT NULL,
   `fecha` date DEFAULT NULL,
@@ -1031,22 +1309,28 @@ CREATE TABLE `tbl_lote` (
   KEY `artId` (`artId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for tbl_notapedido
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_notapedido`
+--
+
 DROP TABLE IF EXISTS `tbl_notapedido`;
-CREATE TABLE `tbl_notapedido` (
+CREATE TABLE IF NOT EXISTS `tbl_notapedido` (
   `id_notaPedido` int(11) NOT NULL AUTO_INCREMENT,
   `fecha` date NOT NULL,
   `id_ordTrabajo` int(11) NOT NULL,
   PRIMARY KEY (`id_notaPedido`)
 ) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for tbl_preventivoherramientas
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_preventivoherramientas`
+--
+
 DROP TABLE IF EXISTS `tbl_preventivoherramientas`;
-CREATE TABLE `tbl_preventivoherramientas` (
+CREATE TABLE IF NOT EXISTS `tbl_preventivoherramientas` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `prevId` int(11) DEFAULT NULL,
   `herrId` int(11) DEFAULT NULL,
@@ -1056,11 +1340,14 @@ CREATE TABLE `tbl_preventivoherramientas` (
   KEY `tbl_preventivoherramientas_ibfk_2` (`herrId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for tbl_preventivoinsumos
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_preventivoinsumos`
+--
+
 DROP TABLE IF EXISTS `tbl_preventivoinsumos`;
-CREATE TABLE `tbl_preventivoinsumos` (
+CREATE TABLE IF NOT EXISTS `tbl_preventivoinsumos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `prevId` int(11) DEFAULT NULL,
   `artId` int(11) DEFAULT NULL,
@@ -1070,31 +1357,37 @@ CREATE TABLE `tbl_preventivoinsumos` (
   KEY `artId` (`artId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for tbl_tipoordentrabajo
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_tipoordentrabajo`
+--
+
 DROP TABLE IF EXISTS `tbl_tipoordentrabajo`;
-CREATE TABLE `tbl_tipoordentrabajo` (
+CREATE TABLE IF NOT EXISTS `tbl_tipoordentrabajo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tipo_orden` int(11) NOT NULL,
-  `descripcion` varchar(50) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `descripcion` varchar(50) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for tbl_trazacomponente
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_trazacomponente`
+--
+
 DROP TABLE IF EXISTS `tbl_trazacomponente`;
-CREATE TABLE `tbl_trazacomponente` (
+CREATE TABLE IF NOT EXISTS `tbl_trazacomponente` (
   `id_trazacomponente` int(11) NOT NULL AUTO_INCREMENT,
   `idcomponenteequipo` int(11) NOT NULL,
   `id_estanteria` int(11) DEFAULT NULL,
   `fila` int(11) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   `fecha_Entrega` datetime DEFAULT NULL,
-  `ult_recibe` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `estado` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `observaciones` varchar(500) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `ult_recibe` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `estado` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
+  `observaciones` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
   `usrId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_trazacomponente`),
   KEY `idcomponenteequipo` (`idcomponenteequipo`),
@@ -1102,49 +1395,61 @@ CREATE TABLE `tbl_trazacomponente` (
   KEY `usrId` (`usrId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for tbl_unidadmedida
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_unidadmedida`
+--
+
 DROP TABLE IF EXISTS `tbl_unidadmedida`;
-CREATE TABLE `tbl_unidadmedida` (
+CREATE TABLE IF NOT EXISTS `tbl_unidadmedida` (
   `id_unidadmedida` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(3000) COLLATE utf8_spanish_ci NOT NULL,
+  `descripcion` varchar(3000) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id_unidadmedida`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
--- ----------------------------
--- Table structure for tbl_valedesacarga
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_valedesacarga`
+--
+
 DROP TABLE IF EXISTS `tbl_valedesacarga`;
-CREATE TABLE `tbl_valedesacarga` (
+CREATE TABLE IF NOT EXISTS `tbl_valedesacarga` (
   `valedid` int(11) NOT NULL AUTO_INCREMENT,
   `valedfecha` datetime DEFAULT NULL,
   `usrId` int(11) DEFAULT NULL,
-  `respons` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
-  `dest` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `respons` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `dest` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`valedid`),
   KEY `usrId` (`usrId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for tbl_valesalida
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_valesalida`
+--
+
 DROP TABLE IF EXISTS `tbl_valesalida`;
-CREATE TABLE `tbl_valesalida` (
+CREATE TABLE IF NOT EXISTS `tbl_valesalida` (
   `valesid` int(11) NOT NULL AUTO_INCREMENT,
   `fecha` date DEFAULT NULL,
   `usrId` int(10) DEFAULT NULL,
-  `respons` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
-  `dest` varchar(255) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `respons` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `dest` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`valesid`),
   KEY `repid` (`usrId`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for tipocuenta
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tipocuenta`
+--
+
 DROP TABLE IF EXISTS `tipocuenta`;
-CREATE TABLE `tipocuenta` (
+CREATE TABLE IF NOT EXISTS `tipocuenta` (
   `tipocuentaid` int(11) NOT NULL AUTO_INCREMENT,
   `tipocuentadescrip` varchar(255) DEFAULT NULL,
   `tipocuentamonto` decimal(10,0) DEFAULT NULL,
@@ -1152,28 +1457,87 @@ CREATE TABLE `tipocuenta` (
   `tipocuentaactivos` decimal(10,0) DEFAULT NULL,
   `tipocuentaempresas` decimal(10,0) DEFAULT NULL,
   PRIMARY KEY (`tipocuentaid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for unidad_industrial
--- ----------------------------
+--
+-- Volcado de datos para la tabla `tipocuenta`
+--
+
+INSERT INTO `tipocuenta` (`tipocuentaid`, `tipocuentadescrip`, `tipocuentamonto`, `tipocuentausuarios`, `tipocuentaactivos`, `tipocuentaempresas`) VALUES
+  (1, 'Gratis', '0', '1', '100', '1'),
+  (2, 'Pro', '100', '10', '10', '2'),
+  (3, 'Platinum', '300', '20', '500', '3');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `unidad_industrial`
+--
+
 DROP TABLE IF EXISTS `unidad_industrial`;
-CREATE TABLE `unidad_industrial` (
+CREATE TABLE IF NOT EXISTS `unidad_industrial` (
   `id_unidad` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(100) COLLATE utf8mb4_spanish_ci NOT NULL,
+  `descripcion` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
   PRIMARY KEY (`id_unidad`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
--- ----------------------------
--- Table structure for usuarioasempresa
--- ----------------------------
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarioasempresa`
+--
+
 DROP TABLE IF EXISTS `usuarioasempresa`;
-CREATE TABLE `usuarioasempresa` (
+CREATE TABLE IF NOT EXISTS `usuarioasempresa` (
   `empresaid` int(11) NOT NULL,
   `usrId` int(11) NOT NULL,
   `fecha` datetime DEFAULT NULL,
   PRIMARY KEY (`empresaid`,`usrId`),
-  KEY `usrId` (`usrId`),
-  CONSTRAINT `usuarioasempresa_ibfk_1` FOREIGN KEY (`empresaid`) REFERENCES `empresas` (`id_empresa`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `usuarioasempresa_ibfk_2` FOREIGN KEY (`usrId`) REFERENCES `sisusers` (`usrId`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `usrId` (`usrId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `clientes`
+--
+ALTER TABLE `clientes`
+ADD CONSTRAINT `fk_clientes_cuenta1` FOREIGN KEY (`cuenta_cuentaid`) REFERENCES `cuenta` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `cuenta`
+--
+ALTER TABLE `cuenta`
+ADD CONSTRAINT `cuenta_ibfk_1` FOREIGN KEY (`tipocuentaid`) REFERENCES `tipocuenta` (`tipocuentaid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `empresas`
+--
+ALTER TABLE `empresas`
+ADD CONSTRAINT `empresas_ibfk_1` FOREIGN KEY (`clienteid`) REFERENCES `clientes` (`clinteid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `equipos`
+--
+ALTER TABLE `equipos`
+ADD CONSTRAINT `equipos_ibfk_1` FOREIGN KEY (`id_empresa`) REFERENCES `empresas` (`id_empresa`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `tbl_detanotapedido`
+--
+ALTER TABLE `tbl_detanotapedido`
+ADD CONSTRAINT `tbl_detanotapedido_ibfk_1` FOREIGN KEY (`id_notaPedido`) REFERENCES `tbl_notapedido` (`id_notaPedido`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `usuarioasempresa`
+--
+ALTER TABLE `usuarioasempresa`
+ADD CONSTRAINT `usuarioasempresa_ibfk_1` FOREIGN KEY (`empresaid`) REFERENCES `empresas` (`id_empresa`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `usuarioasempresa_ibfk_2` FOREIGN KEY (`usrId`) REFERENCES `sisusers` (`usrId`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
