@@ -1456,6 +1456,8 @@ CREATE TABLE IF NOT EXISTS `tipocuenta` (
   `tipocuentausuarios` decimal(10,0) DEFAULT NULL,
   `tipocuentaactivos` decimal(10,0) DEFAULT NULL,
   `tipocuentaempresas` decimal(10,0) DEFAULT NULL,
+  `apps` varchar(2) DEFAULT NULL,
+  `modulo_alerta` varchar(2) DEFAULT NULL,
   PRIMARY KEY (`tipocuentaid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
@@ -1463,10 +1465,10 @@ CREATE TABLE IF NOT EXISTS `tipocuenta` (
 -- Volcado de datos para la tabla `tipocuenta`
 --
 
-INSERT INTO `tipocuenta` (`tipocuentaid`, `tipocuentadescrip`, `tipocuentamonto`, `tipocuentausuarios`, `tipocuentaactivos`, `tipocuentaempresas`) VALUES
-  (1, 'Gratis', '0', '1', '100', '1'),
-  (2, 'Pro', '100', '10', '10', '2'),
-  (3, 'Platinum', '300', '20', '500', '3');
+INSERT INTO `tipocuenta` (`tipocuentaid`, `tipocuentadescrip`, `tipocuentamonto`, `tipocuentausuarios`, `tipocuentaactivos`, `tipocuentaempresas`,`apps`,`modulo_alerta`) VALUES
+  (1, 'Gratis', '0', '1', '100', '1', 'NO','NO'),
+  (2, 'Pro', '100', '10', '10', '2','SI','NO'),
+  (3, 'Platinum', '300', '20', '500', '3','SI','SI');
 
 -- --------------------------------------------------------
 

@@ -7,6 +7,7 @@
         </div>
     </div>
     <div class="row well">
+    <p>(*) Campos obligatorios</p>
         <form action="crear" method="post" id="altacliente">
             <div class="panel-group">
                 <div class="panel panel-default">
@@ -19,51 +20,51 @@
                                 <span class="label label-danger" id="emailerror">Email incorrecto</span>
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="password">Password</label>
+                                <label for="password">Password</label>(*)
                                 <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                                 <span class="label label-danger" id="passworderror">Es necesario ingresar el password</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-xs-6">
-                                <label for="usrname">Nombre</label>
+                                <label for="usrname">Nombre</label>(*)
                                 <input type="text" class="form-control" id="usrname" name="usrname" placeholder="Nombre">
                                 <span class="label label-danger" id="usrnameerror">Es necesario un Nombre</span>
                             </div>
                             <div class="form-group col-xs-6">
-                                <label for="usrLastName">Apellido</label>
+                                <label for="usrLastName">Apellido</label>(*)
                                 <input type="text" class="form-control" id="usrLastName" name="usrLastName" placeholder="Apellido">
                                 <span class="label label-danger" id="usrLastNameError">Es necesario un Apellido</span>
                             </div></div>
                         <div class="form-row col-xs-12">
                             <div class="form-group">
-                                <label for="razonsocial">Razon Social</label>
+                                <label for="razonsocial">Razon Social</label>(*)
                                 <input type="text" class="form-control" id="razonsocial" placeholder="Razon Social" name="razonsocial">
                                 <span class="label label-danger" id="razonsocialerror">Razon Social invalida</span>
                             </div>
                         </div>
                         <div class="form-row col-xs-12">
                             <div class="form-group">
-                                <label for="direccion">Direccion</label>
+                                <label for="direccion">Direccion</label>(*)
                                 <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Av. Libertador 1850">
                                 <span class="label label-danger" id="direccionerror">Direccion incorrecta</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="telefonofijo">Telefono fijo</label>
+                                <label for="telefonofijo">Telefono fijo</label>(*)
                                 <input type="text" class="form-control" id="telefonofijo" name="telefonofijo" placeholder="4262020">
                                 <span class="label label-danger" id="telefonofijoerror">Telefono incorrecto</span>
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="celular">Celular</label>
+                                <label for="celular">Celular</label>(*)
                                 <input type="text" class="form-control" id="celular" name="celular" placeholder="264-583776">
                                 <span class="label label-danger" id="celularerror">Celular incorreto</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-xs-6">
-                                <label for="pais">Pais</label>
+                                <label for="pais">Pais</label>(*)
                                 <select class="form-control" id="pais" name="pais">
                                     <option value="">-- SELECCIONE --</option>
                                     <?php
@@ -73,17 +74,19 @@
                                     }
                                     ?>
                                 </select>
+                                <span class="label label-danger" id="paiserror">Seleccione un pais</span>
                             </div>
                             <div class="form-group col-xs-6">
-                                <label for="provincia">Provincia</label>
+                                <label for="provincia">Provincia</label>(*)
                                 <select class="form-control" id="provincia" name="provincia">
                                     <option value="">-- SELECCIONE --</option>
                                 </select>
+                                <span class="label label-danger" id="provinciaerror">Seleccione una provincia</span>
                             </div>
                         </div>
                         <div class="form-row col-xs-12">
                             <div class="form-group">
-                                <label for="direccion">Localidad</label>
+                                <label for="direccion">Localidad</label>(*)
                                 <input type="text" class="form-control" id="localidad" name="localidad" placeholder="Ejemplo: Rawson">
                                 <span class="label label-danger" id="localidaderror">Localidad incorrecta</span>
                             </div>
@@ -106,11 +109,10 @@
                                 echo '<p>Usuarios: '.$c['tipocuentausuarios'].'</p>';
                                 echo '<p>Activos: '.$c['tipocuentaactivos'].'</p>';
                                 echo '<p>Unidades de negocios: '.$c['tipocuentaempresas'].'</p>';
-                                echo '<p>Apps: NO </p>
-                                      <p>Modulo Alerta: NO </p>';
-                                echo '<input type="radio" name="tipocuenta" value="'.$c['id'].' ">';
-                                echo '</div>
-                                </div>';
+                                echo '<p>Apps: '. $c['apps'] .'</p>
+                                      <p>Modulo Alerta: '.$c['modulo_alerta'].'</p>';
+                                echo '<input type="radio" name="tipocuenta" value="'.$c['id'].'" required>';
+                                echo '</div></div>';
                             }
                             ?>
                         </div>
@@ -124,7 +126,7 @@
                     <div class="panel-body">
                         <div class="form-row">
                             <div class="form-group col-xs-6">
-                                <label for="logo">Logo</label>
+                                <label for="logo">Logo</label>(*)
                                 <output id="list"></output>
                                 <input type="file" accept="image/*" class="form-control" id="logo" name="logo" placeholder="Logo">
                                 <p id="data"></p>
@@ -133,7 +135,7 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-xs-6">
-                                <label for="descripcion">Nombre</label>
+                                <label for="descripcion">Nombre</label>(*)
                                 <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Nombre de la Empresa">
                                 <span class="label label-danger" id="descripcionerror">Ingrese un nombre para la empresa</span>
                             </div>
@@ -141,31 +143,31 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-xs-6">
-                                <label for="cuit">Cuit</label>
+                                <label for="cuit">Cuit</label>(*)
                                 <input type="text" class="form-control" id="cuit" name="cuit" placeholder="CUIT">
                                 <span class="label label-danger" id="cuiterror">CUIT incorrecto</span>
                             </div>
                             <div class="form-group col-xs-6">
-                                <label for="emailempresa">Email</label>
+                                <label for="emailempresa">Email</label>(*)
                                 <input type="email" class="form-control" id="emailempresa" name="emailempresa" placeholder="Direccion de Correo">
                                 <span class="label label-danger" id="emailempresaerror">Email incorreto</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-xs-6">
-                                <label for="direccionempresa">Direccion</label>
+                                <label for="direccionempresa">Direccion</label>(*)
                                 <input type="text" class="form-control" id="direccionempresa" name="direccionempresa" placeholder="Direccion de la Empresa">
                                 <span class="label label-danger" id="direccionempresaerror">Direccion incorreto</span>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-xs-6">
-                                <label for="telefonoempresa">Telefono</label>
+                                <label for="telefonoempresa">Telefono</label>(*)
                                 <input type="text" class="form-control" id="telefonoempresa" name="telefonoempresa" placeholder="Telefono">
                                 <span class="label label-danger" id="telefonoempresaerror">Telefono incorreto</span>
                             </div>
                             <div class="form-group col-xs-6">
-                                <label for="celularempresa">Celular</label>
+                                <label for="celularempresa">Celular</label>(*)
                                 <input type="text" class="form-control" id="celularempresa" name="celularempresa" placeholder="Celular de la Empresa">
                                 <span class="label label-danger" id="celularempresaerror">Celular incorreto</span>
                             </div>
@@ -184,7 +186,7 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-xs-6">
-                                <label for="paisempresa">Pais</label>
+                                <label for="paisempresa">Pais</label>(*)
                                 <select class="form-control" id="paisempresa" name="paisempresa">
                                     <option value="">-- SELECCIONE --</option>
                                     <?php
@@ -194,15 +196,17 @@
                                     }
                                     ?>
                                 </select>
+                                <span class="label label-danger" id="paisempresaerror">Seleccione un pais</span>
                             </div>
                             <div class="form-group col-xs-6">
-                                <label for="provinciaempresa">Provincia</label>
+                                <label for="provinciaempresa">Provincia</label>(*)
                                 <select class="form-control" id="provinciaempresa" name="provinciaempresa">
                                     <option value="">-- SELECCIONE --</option>
                                 </select>
+                                <span class="label label-danger" id="provinciaempresaerror">Seleccione una provincia</span>
                             </div>
                             <div class="form-group col-xs-12">
-                                <label for="localidadempresa">Localidad</label>
+                                <label for="localidadempresa">Localidad</label>(*)
                                 <input type="text" class="form-control" id="localidadempresa" name="localidadempresa" placeholder="Ejemplo: Rivadavia">
                                 <span class="label label-danger" id="localidadempresaerror">Localidad incorrecta</span>
                             </div>
@@ -237,6 +241,10 @@
         $("#emailempresaerror").hide();
         $("#localidadempresaerror").hide();
         $("#errorimage").hide();
+        $("#paiserror").hide();
+        $("#provinciaerror").hide();
+        $("#paisempresaerror").hide();
+        $("#provinciaempresaerror").hide();
 
         $('#pais').change(function(e)
         {
@@ -358,11 +366,28 @@
             $("#localidadempresaerror").show();
             var hayError = true;
         }
+
         if($('#telefonoempresa').val() == '') {
             $("#telefonoempresaerror").show();
             var hayError = true;
         }
 
+                if($('#pais').val() == '') {
+                    $("#paiserror").show();
+                    var hayError = true;
+                }
+                if($('#provincia').val() == '') {
+                    $("#provinciaerror").show();
+                    var hayError = true;
+                }
+                if($('#paisempresa').val() == '') {
+                    $("#paisempresaerror").show();
+                    var hayError = true;
+                }
+                if($('#provinciaempresa').val() == '') {
+                    $("#provinciaempresaerror").show();
+                    var hayError = true;
+                }
         if(sizekiloBytes >  $('#file').attr('size'))
         {
             alert('El tamaño supera el limite permitido!');
@@ -373,7 +398,8 @@
 
             //Preparo los datos para enviarlos al controlador
             var formData = new FormData(document.getElementById("altacliente"));
-
+            if(hayError != true)
+            {
             WaitingOpen('Guardando cambios');
 
             $.ajax({
@@ -385,18 +411,14 @@
                 type: "POST",
                 url: "crear",
                 success: function(data){
-//                    console.log(data);
                     WaitingClose();
-//                    location.href = 'login';
-//                    cargarView( 'login');
+                    location.href = 'login';
                 },
                 error: function(result){
                     WaitingClose();
-//                    alert(result);
-                    //VER QUE MENSAJE MOSTRAR
-//                    alert('Hubo un error al realizar la operación!');
                 }
             });
+            }
         }
     })
 
